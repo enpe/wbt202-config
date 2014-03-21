@@ -1,5 +1,7 @@
-#ifndef WBT202_H
-#define WBT202_H
+#ifndef WBT202_LOG_H
+#define WBT202_LOG_H
+
+static const int BYTE_COUNT_LOG = 88;
 
 enum LogMode
 {
@@ -46,7 +48,7 @@ struct Log
   unsigned short	time_interval_high;         // 0x16	- 0x17 High (Log Time Interval, [1;3600 s])
   unsigned short	seconds_point;              // 0x18	- 0x19 seconds/point (By Time Interval, [1;65535 s])
   unsigned short	meters_point;               // 0x1a	- 0x1b meters/point (By Distance Interval, [1;5000 m])
-  unsigned char     unknown[78];				// 0x1c - 0x57 unknown
+  unsigned char     unknown[60];				// 0x1c - 0x57 unknown
 };
 
-#endif // WBT202_H
+#endif // WBT202_LOG_H
