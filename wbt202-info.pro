@@ -5,5 +5,5 @@ CONFIG -= qt
 
 SOURCES += main.cpp
 
-HEADERS += wbt202.h
+HEADERS += wbt202_log.h
 
