@@ -5,19 +5,6 @@
 #include <wbt202_log.h>
 #include <wbt202_sys.h>
 
-/**
- * @brief serializeLog
- * @param log
- * @return
- */
-unsigned char* serializeLog( const Log * log );
-
-/**
- * @brief deserializeLog
- * @param data
- * @return
- */
-Log* deserializeLog( unsigned char *data );
 
 
 

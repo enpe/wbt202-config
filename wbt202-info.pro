@@ -7,7 +7,6 @@ CONFIG -= qt
 
 SOURCES += \
     main.cpp \
-    wbt202.cpp \
     wbt202_utils.cpp
 
 HEADERS += \
