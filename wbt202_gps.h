@@ -8,9 +8,8 @@
 //                              SBAS [0=OFF,1=ON]
 // 0x1		0x1		uchar		Gps Mode
 // 0x2		0xa7				UNKNOWN
-// 0xa8		0xa9	uchar2		GPS LED cycle [2;10K (ms)]
-// 0xaa		0xab				UNKNOWN
-// 0xac		0xae	uchar3		GPS LED off-cycle [2;10K (ms)]
+// 0xa8		0xab	uint		GPS LED cycle [2;10K (ms)] (stored as musec)
+// 0xac		0xaf	uint		GPS LED off-cycle [2;10K (ms)] (stored as musec)
 // 0xaf		0xbb				UNKNOWN
 // 0xbc		0xbd	uchar2		CHECKSUM ?!?
 //                              GPS LED cycle [2;10K (ms)] +
@@ -23,4 +22,14 @@
 // GPVTG	0x2f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [18181=DISABLED,19462=ENABLED]
 // GPZDA	0x3f [0=DISABLED, 1=ENABLED], 0x44 0x45 ushort [23303=DISABLED,24584=ENABLED]
 // GPGLL	0x1f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [11009=DISABLED,12290=ENABLED]
+
+struct Gps
+{
+	unsigned char   dirty;
+	unsigned char   gps_mode;
+	unsigned char   unknown_01[166];
+	unsigned short  led_cycle;
+	unsigned char   unknown[2];
+};
+
 #endif // WBT202_GPS_H
