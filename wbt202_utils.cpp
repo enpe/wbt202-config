@@ -97,6 +97,7 @@ Sys* deserializeSys( unsigned char * data )
 			sys->device_name[i] = data[0x18+i];
 
 		// UNKNOWN 01
+		sys->start_mode = data[0x2c];
 		sys->shake_mode = data[0x37];
 		// UNKNOWN 02
 		sys->shake_mode_timeout = ( data[0x3b] << 8 | data[0x3a] );
@@ -106,6 +107,7 @@ Sys* deserializeSys( unsigned char * data )
 		for ( int i = 0; i < 4; ++i )
 			sys->password[i] = data[0x42+i];
 
+		sys->restart_device = data[0x8c];
 		sys->time_zone = ( data[0x8f] << 8 | data[0x8d] );
 		// UNKNOWN 04
 		sys->unit = data[0x90];
@@ -165,10 +167,12 @@ std::ostream& operator<<( std::ostream & os, const Sys & sys )
 		{ "magic", *( reinterpret_cast<const int*>( sys.magic ) ) },
 //		{ "device_name", sys.device_name },
 //		{ "device_info", sys.device_info },
+		{ "start_mode", sys.start_mode },
 		{ "shake_mode", sys.shake_mode },
 		{ "shake_mode_timeout", sys.shake_mode_timeout },
 		{ "power_off_timeout", sys.power_off_timeout },
 //		{ "password", sys.password },
+		{ "restart_device", sys.restart_device },
 		{ "time_zone", sys.time_zone },
 		{ "unit", sys.unit }
 	};
