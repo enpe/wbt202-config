@@ -32,8 +32,8 @@ enum DeviceStart
 	HOT_START=3
 };
 
-#pragma pack(push,1)
-struct Sys
+//#pragma pack(push,1)
+struct Wbt202Sys
 {
 	unsigned char	magic[4];
 	unsigned char   device_name[20];

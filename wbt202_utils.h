@@ -11,17 +11,17 @@
  * @param log
  * @return
  */
-unsigned char* serializeLog( const Log * log );
+unsigned char* serializeLog( const Wbt202Log * log );
 
 /**
  * @brief deserializeLog
  * @param data
  * @return
  */
-Log* deserializeLog( unsigned char *data );
+Wbt202Log* deserializeLog( unsigned char *data );
 
-Sys* deserializeSys( unsigned char *data );
+Wbt202Sys* deserializeSys( unsigned char *data );
 
-std::ostream& operator<<( std::ostream & os, const Log & log );
-std::ostream& operator<<( std::ostream & os, const Sys & sys );
+std::ostream& operator<<( std::ostream & os, const Wbt202Log & log );
+std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys );
 #endif // WBT202_UTILS_H

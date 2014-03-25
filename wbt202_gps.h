@@ -23,7 +23,7 @@
 // GPZDA	0x3f [0=DISABLED, 1=ENABLED], 0x44 0x45 ushort [23303=DISABLED,24584=ENABLED]
 // GPGLL	0x1f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [11009=DISABLED,12290=ENABLED]
 
-struct Gps
+struct Wbt202Gps
 {
 	unsigned char   dirty;
 	unsigned char   gps_mode;

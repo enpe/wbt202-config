@@ -67,7 +67,7 @@ enum LogModeUserDefined
 	LOG_MODE_MIXED_DS=15
 };
 
-struct Log
+struct Wbt202Log
 {
 	unsigned char     magic[4];                   //  0x0  - 0x3
 	unsigned char     log_mode;                   //  0x4  - 0x4

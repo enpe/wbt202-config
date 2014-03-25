@@ -35,7 +35,7 @@ int main( int argc, char ** argv )
 	file.read( buffer.data(), buffer.size() );
 	file.close();
 
-	Log * log = deserializeLog(
+	Wbt202Log * log = deserializeLog(
 		reinterpret_cast<unsigned char*>( buffer.data() ) );
 
 	std::cout << "file: " << log_file << std::endl;
@@ -53,7 +53,7 @@ int main( int argc, char ** argv )
 	file.read( buffer.data(), buffer.size() );
 	file.close();
 
-	Sys * sys = deserializeSys(
+	Wbt202Sys * sys = deserializeSys(
 		reinterpret_cast<unsigned char*>( buffer.data() ) );
 
 	std::cout << "file: " << sys_file << std::endl;
@@ -61,7 +61,7 @@ int main( int argc, char ** argv )
 
 	delete sys;
 
-	std::cout << "sizeof(Sys) = " << sizeof(Sys) << std::endl;
+	std::cout << "sizeof(Sys) = " << sizeof(Wbt202Sys) << std::endl;
 
 
 	return 0;

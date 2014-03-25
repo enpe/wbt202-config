@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <iomanip>
 
-unsigned char* serializeLog( const Log * log )
+unsigned char* serializeLog( const Wbt202Log * log )
 {
 	assert( log );
 
@@ -13,9 +13,9 @@ unsigned char* serializeLog( const Log * log )
 	return NULL;
 }
 
-Log* deserializeLog( unsigned char * data )
+Wbt202Log* deserializeLog( unsigned char * data )
 {
-	Log * log = NULL;
+	Wbt202Log * log = NULL;
 	int size_data = sizeof(data) / sizeof(char);
 
 	assert( size_data = BYTE_COUNT_LOG );
@@ -49,7 +49,7 @@ Log* deserializeLog( unsigned char * data )
 #else
 		// Manual assignment of all variables, which is longer but works without
 		// the use of #pragma-statements.
-		log = new Log();
+		log = new Wbt202Log();
 
 		for ( int i = 0; i < 4; ++i )
 			log->magic[i] = data[i];
@@ -77,15 +77,15 @@ Log* deserializeLog( unsigned char * data )
 	return log;
 }
 
-Sys* deserializeSys( unsigned char * data )
+Wbt202Sys* deserializeSys( unsigned char * data )
 {
-	Sys * sys = NULL;
+	Wbt202Sys * sys = NULL;
 	int size_data = sizeof(data) / sizeof(char);
 
 	assert( size_data = BYTE_COUNT_SYS );
 	if ( size_data == BYTE_COUNT_SYS )
 	{
-		sys = new Sys();
+		sys = new Wbt202Sys();
 
 		for ( int i = 0; i < 4; ++i )
 			sys->magic[i] = data[i];
@@ -117,7 +117,7 @@ Sys* deserializeSys( unsigned char * data )
 	return sys;
 }
 
-std::ostream &operator<<(std::ostream &os, const Log &log)
+std::ostream &operator<<(std::ostream &os, const Wbt202Log &log)
 {
 	struct Field
 	{
@@ -155,7 +155,7 @@ std::ostream &operator<<(std::ostream &os, const Log &log)
 	return os;
 }
 
-std::ostream& operator<<( std::ostream & os, const Sys & sys )
+std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 {
 	struct Field
 	{
