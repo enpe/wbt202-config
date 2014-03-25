@@ -32,10 +32,10 @@ enum DeviceStart
 	HOT_START=3
 };
 
-//#pragma pack(push,1)
+#pragma pack(push,1)
 struct Wbt202Sys
 {
-	unsigned char	magic[4];
+	unsigned char   magic[4];
 	unsigned char   device_name[20];
 	unsigned char   device_info[20];
 	unsigned char   start_mode;  // Cf. DeviceStart
@@ -50,7 +50,7 @@ struct Wbt202Sys
 	unsigned char   restart_device; // Dirty flag to indicate device restart?
 	signed short    time_zone;
 	unsigned char   unknown_05;
-	unsigned char	unit;
+	unsigned char   unit;
 	unsigned char   unknown_06[4];
 };
 #pragma pack(pop)
