@@ -22,7 +22,7 @@
 // 0x90		0x90	uchar	Reference unit [0=Metric,1=Imperial]
 // 0x91		0x94			UNKNOWN
 
-static const int BYTE_COUNT_SYS = 150;
+static const int BYTE_COUNT_SYS = 149;
 
 enum DeviceStart
 {
