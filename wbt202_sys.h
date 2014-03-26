@@ -22,6 +22,8 @@
 // 0x90		0x90	uchar	Reference unit [0=Metric,1=Imperial]
 // 0x91		0x94			UNKNOWN
 
+#include <stdint.h>
+
 static const int BYTE_COUNT_SYS = 149;
 
 enum DeviceStart
@@ -35,23 +37,23 @@ enum DeviceStart
 #pragma pack(push,1)
 struct Wbt202Sys
 {
-	unsigned char   magic[4];
-	unsigned char   device_name[20];
-	unsigned char   device_info[20];
-	unsigned char   start_mode;  // Cf. DeviceStart
-	unsigned char   unknown_01[10];
-	unsigned char   shake_mode;
-	unsigned char   unknown_02[2]; // 58
-	unsigned short  shake_mode_timeout;
-	unsigned short  power_off_timeout;
-	unsigned char   unknown_03[4];
-	unsigned char   password[4];
-	unsigned char   unknown_04[70];
-	unsigned char   restart_device; // Dirty flag to indicate device restart?
-	signed short    time_zone;
-	unsigned char   unknown_05;
-	unsigned char   unit;
-	unsigned char   unknown_06[4];
+	uint8_t   magic[4];
+	uint8_t   device_name[20];
+	uint8_t   device_info[20];
+	uint8_t   start_mode;  // Cf. DeviceStart
+	uint8_t   unknown_01[10];
+	uint8_t   shake_mode;
+	uint8_t   unknown_02[2]; // 58
+	uint16_t  shake_mode_timeout;
+	uint16_t  power_off_timeout;
+	uint8_t   unknown_03[4];
+	uint8_t   password[4];
+	uint8_t   unknown_04[70];
+	uint8_t   restart_device; // Dirty flag to indicate device restart?
+	int8_t    time_zone;
+	uint8_t   unknown_05;
+	uint8_t   unit;
+	uint8_t   unknown_06[4];
 };
 #pragma pack(pop)
 

@@ -5,7 +5,6 @@
 
 #include <iostream>
 
-
 /**
  * @brief serializeLog
  * @param log

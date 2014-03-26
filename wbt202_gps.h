@@ -23,13 +23,20 @@
 // GPZDA	0x3f [0=DISABLED, 1=ENABLED], 0x44 0x45 ushort [23303=DISABLED,24584=ENABLED]
 // GPGLL	0x1f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [11009=DISABLED,12290=ENABLED]
 
+#include <stdint.h>
+
+static const int BYTE_COUNT_GPS = 206;
+
+#pragma pack(push, 1)
 struct Wbt202Gps
 {
-	unsigned char   dirty;
-	unsigned char   gps_mode;
-	unsigned char   unknown_01[166];
-	unsigned short  led_cycle;
-	unsigned char   unknown[2];
+	uint8_t   dirty;
+	uint8_t   gps_mode;
+	uint8_t   unknown_01[166];
+	uint16_t  led_cycle;
+	uint8_t   unknown[2];
+	// to be continued ...
 };
+#pragma pack(pop)
 
 #endif // WBT202_GPS_H

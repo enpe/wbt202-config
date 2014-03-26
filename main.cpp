@@ -22,7 +22,7 @@ int main( int argc, char ** argv )
 		data_path = argv[1];
 
 	// LOG.BIN
-	std::string log_file = data_path + "LOG.BIN";
+	std::string log_file = data_path + "/LOG.BIN";
 	std::fstream file( log_file.c_str(), std::ios::in | std::ios::binary );
 
 	if ( ! file.is_open() )
@@ -40,11 +40,11 @@ int main( int argc, char ** argv )
 
 	std::cout << "file: " << log_file << std::endl;
 	std::cout << *log << std::endl;
-
+	std::cout << "sizeof(Wbt202Log) = " << sizeof(Wbt202Log) << std::endl;
 	delete log;
 
 	// SYS.BIN
-	std::string sys_file = data_path + "SYS.BIN";
+	std::string sys_file = data_path + "/SYS.BIN";
 
 	file.open( sys_file.c_str(), std::ios::in | std::ios::binary );
 	assert( file.is_open() );
@@ -58,11 +58,8 @@ int main( int argc, char ** argv )
 
 	std::cout << "file: " << sys_file << std::endl;
 	std::cout << *sys << std::endl;
-
+	std::cout << "sizeof(Wbt202Sys) = " << sizeof(Wbt202Sys) << std::endl;
 	delete sys;
-
-	std::cout << "sizeof(Sys) = " << sizeof(Wbt202Sys) << std::endl;
-
 
 	return 0;
 }

@@ -3,6 +3,12 @@
 #include <cassert>
 #include <cstddef>
 #include <iomanip>
+#include <iostream>
+
+// Check taken from http://esr.ibiblio.org/?p=5095
+#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+#define IS_LITTLE_ENDIAN !IS_BIG_ENDIAN
+
 
 unsigned char* serializeLog( const Wbt202Log * log )
 {
@@ -21,57 +27,35 @@ Wbt202Log* deserializeLog( unsigned char * data )
 	assert( size_data = BYTE_COUNT_LOG );
 	if ( size_data == BYTE_COUNT_LOG )
 	{
-#ifdef USE_MEMORY_ALIGNMENT_WORKAROUND
-		// TODO Test this work-around with clang.
+		if ( ! IS_LITTLE_ENDIAN )
+		{
+			log = new Wbt202Log( *( reinterpret_cast<Wbt202Log*>( data ) ) );
+		}
+		else
+		{
+			log = new Wbt202Log();
 
-		// Directly mapping the struct to the binary data is likely fail to due
-		// to memory alignment problems. According to [1], when the type of
-		// struct-member variables changes, the compiler adds (empty) padding
-		// bytes. As a result the following member variable will use a wrong
-		// offset and the output will be garbled.
-		//
-		// A work-around suggested by [2] makes use of a #pragma-statement,
-		// which (temporarily) changes the memory alignment. According to that
-		// source, this work-around works for GNU, Microsoft and Borland
-		// compilers. Not sure how and if it works with, e.g., clang.
-		//
-		// [1] http://stackoverflow.com/a/9852749
-		// [2] http://solidsmoke.blogspot.com.br/2010/07/woes-of-structure-packing-pragma-pack.html
+			for ( int i = 0; i < 4; ++i )
+				log->magic[i] = data[i];
 
-		// Push current alignment rules to internal stack and for 1-byte
-		// alignment.
-		#pragma pack(push,1)
+			log->log_mode              = data[0x4];
+			log->log_mode_user_defined = data[0x5];
+			log->valid_speed_lowest    = data[0x6];
+			log->valid_speed_highest   = data[0x8] << 8 | data[0x7];
+			log->deg_point             = data[0x9];
+			log->valid_speed_low       = data[0xb] << 8 | data[0xa];
+			log->valid_speed_middle    = data[0xd] << 8 | data[0xc];
+			log->valid_speed_high      = data[0xf] << 8 | data[0xe];
+			log->time_interval_lowest  = data[0x11] << 8 | data[0x10];
+			log->time_interval_low     = data[0x13] << 8 | data[0x12];
+			log->time_interval_middle  = data[0x15] << 8 | data[0x14];
+			log->time_interval_high    = data[0x17] << 8 | data[0x16];
+			log->seconds_point         = data[0x19] << 8 | data[0x18];
+			log->meters_point          = data[0x1b] << 8 | data[0x1a];
 
-		log = new Log( *( reinterpret_cast<Log*>( data ) ) );
-
-		// Restore original memory.
-		#pragma pack(pop)
-#else
-		// Manual assignment of all variables, which is longer but works without
-		// the use of #pragma-statements.
-		log = new Wbt202Log();
-
-		for ( int i = 0; i < 4; ++i )
-			log->magic[i] = data[i];
-
-		log->log_mode              = data[0x4];
-		log->log_mode_user_defined = data[0x5];
-		log->valid_speed_lowest    = data[0x6];
-		log->valid_speed_highest   = data[0x8] << 8 | data[0x7];
-		log->deg_point             = data[0x9];
-		log->valid_speed_low       = data[0xb] << 8 | data[0xa];
-		log->valid_speed_middle    = data[0xd] << 8 | data[0xc];
-		log->valid_speed_high      = data[0xf] << 8 | data[0xe];
-		log->time_interval_lowest  = data[0x11] << 8 | data[0x10];
-		log->time_interval_low     = data[0x13] << 8 | data[0x12];
-		log->time_interval_middle  = data[0x15] << 8 | data[0x14];
-		log->time_interval_high    = data[0x17] << 8 | data[0x16];
-		log->seconds_point         = data[0x19] << 8 | data[0x18];
-		log->meters_point          = data[0x1b] << 8 | data[0x1a];
-
-		for ( int i = 0; i < 60; ++i )
-			log->unknown[i] = data[0x1b + i];
-#endif // USE_MEMORY_ALIGNMENT_WORKAROUND
+			for ( int i = 0; i < 60; ++i )
+				log->unknown[i] = data[0x1b + i];
+		}
 	}
 
 	return log;
@@ -85,33 +69,40 @@ Wbt202Sys* deserializeSys( unsigned char * data )
 	assert( size_data = BYTE_COUNT_SYS );
 	if ( size_data == BYTE_COUNT_SYS )
 	{
-		sys = new Wbt202Sys();
+		if ( ! IS_LITTLE_ENDIAN )
+		{
+			sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
+		}
+		else
+		{
+			sys = new Wbt202Sys();
 
-		for ( int i = 0; i < 4; ++i )
-			sys->magic[i] = data[i];
+			for ( int i = 0; i < 4; ++i )
+				sys->magic[i] = data[i];
 
-		for ( int i = 0; i < 20; ++i )
-			sys->device_name[i] = data[0x4+i];
+			for ( int i = 0; i < 20; ++i )
+				sys->device_name[i] = data[0x4+i];
 
-		for ( int i = 0; i < 20; ++i )
-			sys->device_name[i] = data[0x18+i];
+			for ( int i = 0; i < 20; ++i )
+				sys->device_name[i] = data[0x18+i];
 
-		// UNKNOWN 01
-		sys->start_mode = data[0x2c];
-		sys->shake_mode = data[0x37];
-		// UNKNOWN 02
-		sys->shake_mode_timeout = ( data[0x3b] << 8 | data[0x3a] );
-		sys->power_off_timeout = ( data[0x3d] << 8 | data[0x3c] );
-		// UNKNOWN 03
+			// UNKNOWN 01
+			sys->start_mode = data[0x2c];
+			sys->shake_mode = data[0x37];
+			// UNKNOWN 02
+			sys->shake_mode_timeout = ( data[0x3b] << 8 | data[0x3a] );
+			sys->power_off_timeout = ( data[0x3d] << 8 | data[0x3c] );
+			// UNKNOWN 03
 
-		for ( int i = 0; i < 4; ++i )
-			sys->password[i] = data[0x42+i];
+			for ( int i = 0; i < 4; ++i )
+				sys->password[i] = data[0x42+i];
 
-		sys->restart_device = data[0x8c];
-		sys->time_zone = ( data[0x8f] << 8 | data[0x8d] );
-		// UNKNOWN 04
-		sys->unit = data[0x90];
-		// UNKNOWN 05
+			sys->restart_device = data[0x8c];
+			sys->time_zone = ( data[0x8f] << 8 | data[0x8d] );
+			// UNKNOWN 04
+			sys->unit = data[0x90];
+			// UNKNOWN 05
+		}
 	}
 
 	return sys;
@@ -147,9 +138,11 @@ std::ostream &operator<<(std::ostream &os, const Wbt202Log &log)
 	for ( int i = 0; i < count; ++i )
 	{
 		os << std::left << std::setw( 30 ) << std::setfill( '.' )
-		   << fields[i].name
-		   << fields[i].value
-		   << std::endl;
+			<< fields[i].name
+			<< fields[i].value;
+
+		if ( i < (count-1) )
+			os << std::endl;
 	}
 
 	return os;
@@ -179,21 +172,23 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 	int count = sizeof( fields ) / sizeof( Field );
 
 	os << std::left << std::setw( 30 ) << std::setfill( '.' )
-	   << "device_name"
-	   << sys.device_name
-	   << std::endl;
+		<< "device_name"
+		<< sys.device_name
+		<< std::endl;
 
 	os << std::left << std::setw( 30 ) << std::setfill( '.' )
-	   << "device_info"
-	   << sys.device_info
-	   << std::endl;
+		<< "device_info"
+		<< sys.device_info
+		<< std::endl;
 
 	for ( int i = 0; i < count; ++i )
 	{
 		os << std::left << std::setw( 30 ) << std::setfill( '.' )
-		   << fields[i].name
-		   << fields[i].value
-		   << std::endl;
+			<< fields[i].name
+			<< fields[i].value;
+
+		if ( i < (count-1) )
+			os << std::endl;
 	}
 
 	return os;
