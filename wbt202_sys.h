@@ -34,8 +34,12 @@
 
 #include <stdint.h>
 
-static const int BYTE_COUNT_SYS = 149;
+static const int      BYTE_COUNT_SYS   = 149;
+static const uint32_t DEFAULT_PASSWORD = 0xFFFFFFFF;
 
+/**
+ * @brief The DeviceStart enum
+ */
 enum DeviceStart
 {
 	NO_START=0,
@@ -45,6 +49,12 @@ enum DeviceStart
 };
 
 #pragma pack(push,1)
+
+/**
+ * @brief The Wbt202Sys struct
+ *
+ * // TODO Move the notes from above to here (in Doxygen-format).
+ */
 struct Wbt202Sys
 {
 	uint32_t  magic_begin;
@@ -70,6 +80,7 @@ struct Wbt202Sys
 	uint8_t   unit;
 	uint32_t  magic_end;
 };
+
 #pragma pack(pop)
 
 #endif //  WBT202_SYS_H

@@ -3,8 +3,6 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-#DEFINES += USE_MEMORY_ALIGNMENT_WORKAROUND
-
 SOURCES += \
     main.cpp \
     wbt202_utils.cpp

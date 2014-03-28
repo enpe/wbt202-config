@@ -73,6 +73,12 @@ enum LogModeUserDefined
 };
 
 #pragma pack(push, 1)
+
+/**
+ * @brief The Wbt202Log struct
+ *
+ * // TODO Move the notes from above to here (in Doxygen-format).
+ */
 struct Wbt202Log
 {
 	uint32_t  magic_begin;            //  0x00 - 0x03
@@ -94,6 +100,7 @@ struct Wbt202Log
 	uint8_t   unknown_53;             //  0x53 - 0x53 unknown
 	uint32_t  magic_end;              //  0x54 - 0x57
 };
+
 #pragma pack(pop)
 
 #endif //  WBT202_LOG_H

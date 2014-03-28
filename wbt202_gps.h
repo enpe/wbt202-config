@@ -28,6 +28,12 @@
 static const int BYTE_COUNT_GPS = 206;
 
 #pragma pack(push, 1)
+
+/**
+ * @brief The Wbt202Gps struct
+ *
+ * // TODO Move the notes from above to here (in Doxygen-format).
+ */
 struct Wbt202Gps
 {
 	uint8_t   dirty;
@@ -37,6 +43,7 @@ struct Wbt202Gps
 	uint8_t   unknown[2];
 	// to be continued ...
 };
+
 #pragma pack(pop)
 
 #endif // WBT202_GPS_H
