@@ -23,6 +23,32 @@
 // GPZDA	0x3f [0=DISABLED, 1=ENABLED], 0x44 0x45 ushort [23303=DISABLED,24584=ENABLED]
 // GPGLL	0x1f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [11009=DISABLED,12290=ENABLED]
 
+// - the GPS.BIN contains several structs of different sizes, easy to spot by looking for the magic header (see below)
+// - values in the following description are big-endian
+// - the structs look like this:
+//
+//  offset  size      value/description
+//  0x00    uint16    magic header value 0x62B5
+//  0x02    uint8     must be 0 < x < 14
+//  0x03    uint8
+//  0x04    uint16    N: payload length in bytes
+//  0x06    uint8[N]  payload
+//  0x06+N  uint8     checksum byte 1
+//  0x07+N  uint8     checksum byte 2
+//
+// - the two checksum bytes are computed as follows:
+//   - note that all summands are 8-bit, so they can (and are supposed to) overflow during the additions
+//
+//   uint8_t * pSrc = address of struct's first byte
+//   uint16_t len = value N from the table above
+//   uint8_t sum1 = pSrc[ 2 ] + pSrc[ 3 ] + ( len & 0xFF ) + ( ( len & 0xFF00 ) >> 8 );
+//   uint8_t sum2 = sum1 + 3 * pSrc[ 2 ] + 2 * pSrc[ 3 ] + ( len & 0xFF );
+//   for ( int i = 0; i < len; ++i )
+//   {
+//       sum1 += pSrc[ i + 6 ]
+//       sum2 += sum1
+//   }
+
 #include <stdint.h>
 
 static const int BYTE_COUNT_GPS = 206;
