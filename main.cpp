@@ -35,7 +35,7 @@ int main( int argc, char ** argv )
 	file.read( buffer.data(), buffer.size() );
 	file.close();
 
-	Wbt202Log * log = deserializeLog(
+	Wbt202Log * log = toWbt202Log(
 		reinterpret_cast<unsigned char*>( buffer.data() ) );
 
 	std::cout << "file: " << log_file << std::endl;
@@ -53,7 +53,7 @@ int main( int argc, char ** argv )
 	file.read( buffer.data(), buffer.size() );
 	file.close();
 
-	Wbt202Sys * sys = deserializeSys(
+	Wbt202Sys * sys = toWbt202Sys(
 		reinterpret_cast<unsigned char*>( buffer.data() ) );
 
 	std::cout << "file: " << sys_file << std::endl;

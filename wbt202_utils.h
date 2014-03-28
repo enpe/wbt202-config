@@ -1,26 +1,40 @@
+/** @file wbt202_utils.h */
+
 #ifndef WBT202_UTILS_H
 #define WBT202_UTILS_H
 
-#include <wbt202.h>
+#include "wbt202.h"
 
 #include <iostream>
 
 /**
- * @brief serializeLog
- * @param log
- * @return
+ * @name Serialize the structs.
+ *
+ * @{
  */
-unsigned char* serializeLog( const Wbt202Log * log );
+unsigned char* toBinary( const Wbt202Log * log );
+unsigned char* toBinary( const Wbt202Sys * log );
+unsigned char* toBinary( const Wbt202Gps * log );
+/** @} */
 
 /**
- * @brief deserializeLog
- * @param data
- * @return
+ * @name Deserialize the binary data.
+ *
+ * @{
  */
-Wbt202Log* deserializeLog( unsigned char *data );
+Wbt202Gps* toWbt202Gps( unsigned char * data );
+Wbt202Log* toWbt202Log( unsigned char * data );
+Wbt202Sys* toWbt202Sys( unsigned char * data );
+/** @} */
 
-Wbt202Sys* deserializeSys( unsigned char *data );
-
+/**
+ * @name Overloaded operators for console output.
+	*
+ * @{
+ */
+std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps );
 std::ostream& operator<<( std::ostream & os, const Wbt202Log & log );
 std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys );
+/** @} */
+
 #endif // WBT202_UTILS_H

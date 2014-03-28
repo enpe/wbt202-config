@@ -1,9 +1,13 @@
+/** @file wbt202_utils.cpp */
+
 #include "wbt202_utils.h"
 
 #include <cassert>
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 // Check taken from http://esr.ibiblio.org/?p=5095
 // TODO: Replace this runtime check of machine's endianness with a compile-time check. This
@@ -47,16 +51,34 @@ void convertByteOrder( uint32_t & n )
 		| ( ( n & 0xFF000000 ) >> 24 );
 }
 
+/**
+ * @name Password utilities.
+ *
+ * @{
+ */
+
+/** Encode a password. */
+uint32_t encodePassword( uint32_t p )
+{
+	return 152 * ( p + 11977 );
+}
+
+/** Decode a password */
 uint32_t decodePassword( uint32_t p )
 {
 	return ( p / 152 ) - 11977;
 }
 
+/** Check if a password has been set. */
+bool enabledPassword( uint32_t p )
+{
+	return p != DEFAULT_PASSWORD;
+}
+/** @} */
+
 } // unnamed namespace
 
-
-
-unsigned char* serializeLog( const Wbt202Log * log )
+unsigned char* toBinary( const Wbt202Log * log )
 {
 	assert( log );
 
@@ -65,8 +87,37 @@ unsigned char* serializeLog( const Wbt202Log * log )
 	return NULL;
 }
 
-Wbt202Log* deserializeLog( unsigned char * data )
+unsigned char* toBinary( const Wbt202Sys * log )
 {
+	assert( log );
+
+	// TODO Missing implementation.
+
+	return NULL;
+}
+
+unsigned char* toBinary( const Wbt202Gps * log )
+{
+	assert( log );
+
+	// TODO Missing implementation.
+
+	return NULL;
+}
+
+Wbt202Gps * toWbt202Gps( unsigned char * data )
+{
+	assert( data );
+
+	// TODO Missing implementation.
+
+	return new Wbt202Gps();
+}
+
+Wbt202Log* toWbt202Log( unsigned char * data )
+{
+	assert( data );
+
 	Wbt202Log * log = NULL;
 	int size_data = sizeof(data) / sizeof(char);
 
@@ -97,8 +148,10 @@ Wbt202Log* deserializeLog( unsigned char * data )
 	return log;
 }
 
-Wbt202Sys* deserializeSys( unsigned char * data )
+Wbt202Sys* toWbt202Sys( unsigned char * data )
 {
+	assert( data );
+
 	Wbt202Sys * sys = NULL;
 	int size_data = sizeof(data) / sizeof(char);
 
@@ -107,8 +160,8 @@ Wbt202Sys* deserializeSys( unsigned char * data )
 	{
 		sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
 
-		// If we are not running on a little-endian machine, we must explicitely convert the data to
-		// big-endian byte order.
+		// If we are not running on a little-endian machine, we must explicitly
+		// convert the data to big-endian byte order.
 		if ( ! IS_LITTLE_ENDIAN )
 		{
 			convertByteOrder( sys->magic_begin        );
@@ -125,6 +178,15 @@ Wbt202Sys* deserializeSys( unsigned char * data )
 	}
 
 	return sys;
+}
+
+std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
+{
+	// TODO Missing implementation.
+	os << "MISSING IMPLEMENTATION" << std::endl;
+	os << gps.dirty << std::endl;
+
+	return os;
 }
 
 std::ostream &operator<<(std::ostream &os, const Wbt202Log &log)
@@ -176,9 +238,29 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 		int value;
 	};
 
-	// TODO: Check if the encoded password is 0xFFFFFFFF and, if it is, do not try to decode but
-	//       signal "password not used" instead.
-	uint32_t password = decodePassword( sys.password );
+	std::string device_name = "<not set>";
+	std::string device_info = "<not set>";
+	std::string password    = "<not set>";
+
+	// Check if a device name has been set.
+	if ( sys.device_name[0] != '\0' )
+		device_name = reinterpret_cast<const char*>( sys.device_name );
+
+	// Check if a device description has been set.
+	if ( sys.device_info[0] != '\0' )
+		device_info = reinterpret_cast<const char*>( sys.device_info );
+
+	// Check if a password has been set.
+	if ( enabledPassword( sys.password ) )
+	{
+		uint32_t decoded = decodePassword( sys.password );
+		assert( sys.password == encodePassword( decoded ) );
+
+		std::ostringstream oss;
+		oss << decodePassword( sys.password );
+
+		password = oss.str();
+	}
 
 	Field fields[] = {
 		{ "magic_begin",        static_cast< int >( sys.magic_begin        ) },
@@ -188,24 +270,31 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 		{ "shake_mode",         static_cast< int >( sys.shake_mode         ) },
 		{ "shake_mode_timeout", static_cast< int >( sys.shake_mode_timeout ) },
 		{ "power_off_timeout",  static_cast< int >( sys.power_off_timeout  ) },
-		{ "password",           static_cast< int >( password               ) },
 		{ "time_zone",          static_cast< int >( sys.time_zone          ) },
 		{ "gui_language",       static_cast< int >( sys.gui_language       ) },
 		{ "unit",               static_cast< int >( sys.unit               ) },
 		{ "magic_end",          static_cast< int >( sys.magic_end          ) },
 	};
-	int count = sizeof( fields ) / sizeof( Field );
 
+	// Device name
 	os << std::left << std::setw( 30 ) << std::setfill( '.' )
 		<< "device_name"
-		<< sys.device_name
+		<< device_name
 		<< std::endl;
 
+	// Device info
 	os << std::left << std::setw( 30 ) << std::setfill( '.' )
 		<< "device_info"
-		<< sys.device_info
+		<< device_info
 		<< std::endl;
 
+	// Password
+	os << std::left << std::setw( 30 ) << std::setfill( '.' )
+		<< "password"
+		<< password
+		<< std::endl;
+
+	int count = sizeof( fields ) / sizeof( Field );
 	for ( int i = 0; i < count; ++i )
 	{
 		os << std::left << std::setw( 30 ) << std::setfill( '.' )
