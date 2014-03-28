@@ -6,8 +6,54 @@
 #include <iostream>
 
 // Check taken from http://esr.ibiblio.org/?p=5095
+// TODO: Replace this runtime check of machine's endianness with a compile-time check. This
+//       does not seem to be too easy to do reliably though.
 #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 #define IS_LITTLE_ENDIAN !IS_BIG_ENDIAN
+
+
+namespace
+{
+
+/**
+ * @brief Convert between little-endian and big-endian byte order.
+ */
+void convertByteOrder( uint16_t & n )
+{
+	n =
+		  ( ( n & 0x00FF ) << 8 )
+		| ( ( n & 0xFF00 ) >> 8 );
+}
+
+/**
+ * @brief Convert between little-endian and big-endian byte order.
+ */
+void convertByteOrder( int16_t & n )
+{
+	n =
+		  ( ( n & 0x00FF ) << 8 )
+		| ( ( n & 0xFF00 ) >> 8 );
+}
+
+/**
+ * @brief Convert between little-endian and big-endian byte order.
+ */
+void convertByteOrder( uint32_t & n )
+{
+	n =
+		  ( ( n & 0x000000FF ) << 24 )
+		| ( ( n & 0x0000FF00 ) <<  8 )
+		| ( ( n & 0x00FF0000 ) >>  8 )
+		| ( ( n & 0xFF000000 ) >> 24 );
+}
+
+uint32_t decodePassword( uint32_t p )
+{
+	return ( p / 152 ) - 11977;
+}
+
+} // unnamed namespace
+
 
 
 unsigned char* serializeLog( const Wbt202Log * log )
@@ -69,39 +115,22 @@ Wbt202Sys* deserializeSys( unsigned char * data )
 	assert( size_data = BYTE_COUNT_SYS );
 	if ( size_data == BYTE_COUNT_SYS )
 	{
+		sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
+
+		// If we are not running on a little-endian machine, we must explicitely convert the data to
+		// big-endian byte order.
 		if ( ! IS_LITTLE_ENDIAN )
 		{
-			sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
-		}
-		else
-		{
-			sys = new Wbt202Sys();
-
-			for ( int i = 0; i < 4; ++i )
-				sys->magic[i] = data[i];
-
-			for ( int i = 0; i < 20; ++i )
-				sys->device_name[i] = data[0x4+i];
-
-			for ( int i = 0; i < 20; ++i )
-				sys->device_name[i] = data[0x18+i];
-
-			// UNKNOWN 01
-			sys->start_mode = data[0x2c];
-			sys->shake_mode = data[0x37];
-			// UNKNOWN 02
-			sys->shake_mode_timeout = ( data[0x3b] << 8 | data[0x3a] );
-			sys->power_off_timeout = ( data[0x3d] << 8 | data[0x3c] );
-			// UNKNOWN 03
-
-			for ( int i = 0; i < 4; ++i )
-				sys->password[i] = data[0x42+i];
-
-			sys->restart_device = data[0x8c];
-			sys->time_zone = ( data[0x8f] << 8 | data[0x8d] );
-			// UNKNOWN 04
-			sys->unit = data[0x90];
-			// UNKNOWN 05
+			convertByteOrder( sys->magic_begin        );
+			convertByteOrder( sys->cid                );
+			convertByteOrder( sys->pid                );
+			convertByteOrder( sys->unknown_31         );
+			convertByteOrder( sys->unknown_35         );
+			convertByteOrder( sys->shake_mode_timeout );
+			convertByteOrder( sys->power_off_timeout  );
+			convertByteOrder( sys->password           );
+			convertByteOrder( sys->time_zone          );
+			convertByteOrder( sys->magic_end          );
 		}
 	}
 
@@ -156,18 +185,23 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 		int value;
 	};
 
+	// TODO: Check if the encoded password is 0xFFFFFFFF and, if it is, do not try to decode but
+	//       signal "password not used" instead.
+	uint32_t password = decodePassword( sys.password );
+
 	Field fields[] = {
-		{ "magic", *( reinterpret_cast<const int*>( sys.magic ) ) },
-//		{ "device_name", sys.device_name },
-//		{ "device_info", sys.device_info },
-		{ "start_mode", sys.start_mode },
-		{ "shake_mode", sys.shake_mode },
-		{ "shake_mode_timeout", sys.shake_mode_timeout },
-		{ "power_off_timeout", sys.power_off_timeout },
-//		{ "password", sys.password },
-		{ "restart_device", sys.restart_device },
-		{ "time_zone", sys.time_zone },
-		{ "unit", sys.unit }
+		{ "magic_begin",        static_cast< int >( sys.magic_begin        ) },
+		{ "start_mode",         static_cast< int >( sys.start_mode         ) },
+		{ "cid",                static_cast< int >( sys.cid                ) },
+		{ "pid",                static_cast< int >( sys.pid                ) },
+		{ "shake_mode",         static_cast< int >( sys.shake_mode         ) },
+		{ "shake_mode_timeout", static_cast< int >( sys.shake_mode_timeout ) },
+		{ "power_off_timeout",  static_cast< int >( sys.power_off_timeout  ) },
+		{ "password",           static_cast< int >( password               ) },
+		{ "time_zone",          static_cast< int >( sys.time_zone          ) },
+		{ "gui_language",       static_cast< int >( sys.gui_language       ) },
+		{ "unit",               static_cast< int >( sys.unit               ) },
+		{ "magic_end",          static_cast< int >( sys.magic_end          ) },
 	};
 	int count = sizeof( fields ) / sizeof( Field );
 
