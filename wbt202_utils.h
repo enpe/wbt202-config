@@ -3,7 +3,7 @@
 #ifndef WBT202_UTILS_H
 #define WBT202_UTILS_H
 
-#include "wbt202.h"
+#include <wbt202.h>
 
 #include <iostream>
 
