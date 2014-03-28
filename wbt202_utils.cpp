@@ -73,34 +73,24 @@ Wbt202Log* deserializeLog( unsigned char * data )
 	assert( size_data = BYTE_COUNT_LOG );
 	if ( size_data == BYTE_COUNT_LOG )
 	{
+		log = new Wbt202Log( *( reinterpret_cast<Wbt202Log*>( data ) ) );
+
+		// If we are not running on a little-endian machine, we must explicitely convert the data to
+		// big-endian byte order.
 		if ( ! IS_LITTLE_ENDIAN )
 		{
-			log = new Wbt202Log( *( reinterpret_cast<Wbt202Log*>( data ) ) );
-		}
-		else
-		{
-			log = new Wbt202Log();
-
-			for ( int i = 0; i < 4; ++i )
-				log->magic[i] = data[i];
-
-			log->log_mode              = data[0x4];
-			log->log_mode_user_defined = data[0x5];
-			log->valid_speed_lowest    = data[0x6];
-			log->valid_speed_highest   = data[0x8] << 8 | data[0x7];
-			log->deg_point             = data[0x9];
-			log->valid_speed_low       = data[0xb] << 8 | data[0xa];
-			log->valid_speed_middle    = data[0xd] << 8 | data[0xc];
-			log->valid_speed_high      = data[0xf] << 8 | data[0xe];
-			log->time_interval_lowest  = data[0x11] << 8 | data[0x10];
-			log->time_interval_low     = data[0x13] << 8 | data[0x12];
-			log->time_interval_middle  = data[0x15] << 8 | data[0x14];
-			log->time_interval_high    = data[0x17] << 8 | data[0x16];
-			log->seconds_point         = data[0x19] << 8 | data[0x18];
-			log->meters_point          = data[0x1b] << 8 | data[0x1a];
-
-			for ( int i = 0; i < 60; ++i )
-				log->unknown[i] = data[0x1b + i];
+			convertByteOrder( log->magic_begin          );
+			convertByteOrder( log->valid_speed_highest  );
+			convertByteOrder( log->valid_speed_low      );
+			convertByteOrder( log->valid_speed_middle   );
+			convertByteOrder( log->valid_speed_high     );
+			convertByteOrder( log->time_interval_lowest );
+			convertByteOrder( log->time_interval_low    );
+			convertByteOrder( log->time_interval_middle );
+			convertByteOrder( log->time_interval_high   );
+			convertByteOrder( log->seconds_point        );
+			convertByteOrder( log->meters_point         );
+			convertByteOrder( log->magic_end            );
 		}
 	}
 
@@ -146,21 +136,22 @@ std::ostream &operator<<(std::ostream &os, const Wbt202Log &log)
 	};
 
 	Field fields[] = {
-		{ "magic", *( reinterpret_cast<const int*>( log.magic ) ) },
-		{ "log_mode",              static_cast<int>( log.log_mode ) },
+		{ "magic_begin",           static_cast<int>( log.magic_begin           ) },
+		{ "log_mode",              static_cast<int>( log.log_mode              ) },
 		{ "log_mode_user_defined", static_cast<int>( log.log_mode_user_defined ) },
-		{ "valid_speed_lowest",    static_cast<int>( log.valid_speed_lowest ) },
-		{ "valid_speed_highest",   static_cast<int>( log.valid_speed_highest ) },
-		{ "deg_point",             static_cast<int>( log.deg_point ) },
-		{ "valid_speed_low",       static_cast<int>( log.valid_speed_low ) },
-		{ "valid_speed_middle",    static_cast<int>( log.valid_speed_middle ) },
-		{ "valid_speed_high",      static_cast<int>( log.valid_speed_high ) },
-		{ "time_interval_lowest",  static_cast<int>( log.time_interval_lowest ) },
-		{ "time_interval_low",     static_cast<int>( log.time_interval_low ) },
-		{ "time_interval_middle",  static_cast<int>( log.time_interval_middle ) },
-		{ "time_interval_high",    static_cast<int>( log.time_interval_high ) },
-		{ "seconds_point",         static_cast<int>( log.seconds_point ) },
-		{ "meters_point",          static_cast<int>( log.meters_point ) }
+		{ "valid_speed_lowest",    static_cast<int>( log.valid_speed_lowest    ) },
+		{ "valid_speed_highest",   static_cast<int>( log.valid_speed_highest   ) },
+		{ "deg_point",             static_cast<int>( log.deg_point             ) },
+		{ "valid_speed_low",       static_cast<int>( log.valid_speed_low       ) },
+		{ "valid_speed_middle",    static_cast<int>( log.valid_speed_middle    ) },
+		{ "valid_speed_high",      static_cast<int>( log.valid_speed_high      ) },
+		{ "time_interval_lowest",  static_cast<int>( log.time_interval_lowest  ) },
+		{ "time_interval_low",     static_cast<int>( log.time_interval_low     ) },
+		{ "time_interval_middle",  static_cast<int>( log.time_interval_middle  ) },
+		{ "time_interval_high",    static_cast<int>( log.time_interval_high    ) },
+		{ "seconds_point",         static_cast<int>( log.seconds_point         ) },
+		{ "meters_point",          static_cast<int>( log.meters_point          ) },
+		{ "magic_end",             static_cast<int>( log.magic_end             ) },
 	};
 	int count = sizeof( fields ) / sizeof( Field );
 
