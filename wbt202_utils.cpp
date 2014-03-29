@@ -2,6 +2,7 @@
 
 #include "wbt202_utils.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <iomanip>
@@ -76,33 +77,76 @@ bool enabledPassword( uint32_t p )
 }
 /** @} */
 
+bool isValid( const Wbt202Gps * gps )
+{
+	bool valid = false;
+
+	if ( gps )
+	{
+		// TODO Missing implementation.
+	}
+
+	return valid;
+}
+
+bool isValid( const Wbt202Log * log )
+{
+	bool valid = false;
+
+	if ( log )
+	{
+		// TODO Missing implementation.
+	}
+
+	return valid;
+}
+
+bool isValid( const Wbt202Sys * sys )
+{
+	bool valid = false;
+
+	if ( sys )
+	{
+		// TODO Missing implementation.
+	}
+
+	return valid;
+}
+
+template <typename T>
+unsigned char* toBinary( const T * t )
+{
+	assert( t );
+
+	unsigned char * data = NULL;
+
+	if ( isValid( t ) )
+	{
+		int byteCount = sizeof( T );
+		data = new unsigned char[ byteCount ];
+
+		const unsigned char * src = reinterpret_cast<const unsigned char*>( t );
+		std::copy( &(src[0]), &(src[0]) + byteCount, &(data[0]) );
+	}
+
+	return data;
+}
+
 } // unnamed namespace
+
+
+unsigned char* toBinary( const Wbt202Gps * gps )
+{
+	return toBinary< Wbt202Gps >( gps );
+}
 
 unsigned char* toBinary( const Wbt202Log * log )
 {
-	assert( log );
+	return toBinary< Wbt202Log >( log );}
 
-	// TODO Missing implementation.
-
-	return NULL;
-}
-
-unsigned char* toBinary( const Wbt202Sys * log )
+unsigned char* toBinary( const Wbt202Sys * sys )
 {
-	assert( log );
-
-	// TODO Missing implementation.
-
-	return NULL;
-}
-
-unsigned char* toBinary( const Wbt202Gps * log )
-{
-	assert( log );
-
-	// TODO Missing implementation.
-
-	return NULL;
+	return toBinary< Wbt202Sys >( sys );
 }
 
 Wbt202Gps * toWbt202Gps( unsigned char * data )
@@ -111,7 +155,7 @@ Wbt202Gps * toWbt202Gps( unsigned char * data )
 
 	// TODO Missing implementation.
 
-	return new Wbt202Gps();
+	return NULL;
 }
 
 Wbt202Log* toWbt202Log( unsigned char * data )

@@ -7,29 +7,58 @@
 
 #include <iostream>
 
-/**
- * @name Serialize the structs.
- *
+/** @name Serialize the structs.
  * @{
+ */
+
+/** @brief Convert GPS data to binary array.
+ *
+ * Returns a NULL pointer if settings fail the internal sanity check.
+ */
+unsigned char* toBinary( const Wbt202Gps * gps );
+
+/** @brief Convert LOG data to binary array.
+ *
+ * Returns a NULL pointer if settings fail the internal sanity check.
  */
 unsigned char* toBinary( const Wbt202Log * log );
-unsigned char* toBinary( const Wbt202Sys * log );
-unsigned char* toBinary( const Wbt202Gps * log );
+
+/** @brief Convert SYS data to binary array.
+ *
+ * Returns a NULL pointer if settings fail the internal sanity check.
+ */
+unsigned char* toBinary( const Wbt202Sys * sys );
+
 /** @} */
 
-/**
- * @name Deserialize the binary data.
- *
+/** @name Deserialize the binary data.
  * @{
  */
+
+/** @brief Interpret array as GPS data.
+ *
+ * The array must be @c BYTE_COUNT_GPS bytes long. If it isn't, a NULL pointer
+ * is returned.
+ */
 Wbt202Gps* toWbt202Gps( unsigned char * data );
+
+/** @brief Interpret array as LOG data.
+ *
+ * The array must be @c BYTE_COUNT_LOG bytes long. If it isn't, a NULL pointer
+ * is returned.
+ */
 Wbt202Log* toWbt202Log( unsigned char * data );
+
+/** @brief Interpret array as SYS data.
+ *
+ * The array must be @c BYTE_COUNT_SYS bytes long. If it isn't, a NULL pointer
+ * is returned.
+ */
 Wbt202Sys* toWbt202Sys( unsigned char * data );
+
 /** @} */
 
-/**
- * @name Overloaded operators for console output.
-	*
+/** @name Overloaded operators for console output.
  * @{
  */
 std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps );
