@@ -21,6 +21,9 @@ int main( int argc, char ** argv )
 	if ( argc == 2 )
 		data_path = argv[1];
 
+	std::cout << "System uses " << ( IS_BIG_ENDIAN ? " B I G " : "little" );
+	std::cout << " endian byte order." << std::endl;
+
 	// LOG.BIN
 	std::string log_file = data_path + "/LOG.BIN";
 	std::fstream file( log_file.c_str(), std::ios::in | std::ios::binary );

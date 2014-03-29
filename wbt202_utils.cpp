@@ -10,13 +10,6 @@
 #include <sstream>
 #include <string>
 
-// Check taken from http://esr.ibiblio.org/?p=5095
-// TODO: Replace this runtime check of machine's endianness with a compile-time check. This
-//       does not seem to be too easy to do reliably though.
-#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
-#define IS_LITTLE_ENDIAN !IS_BIG_ENDIAN
-
-
 namespace
 {
 
@@ -172,7 +165,7 @@ Wbt202Log* toWbt202Log( unsigned char * data )
 
 		// If we are not running on a little-endian machine, we must explicitely convert the data to
 		// big-endian byte order.
-		if ( ! IS_LITTLE_ENDIAN )
+		if ( IS_BIG_ENDIAN )
 		{
 			convertByteOrder( log->magic_begin          );
 			convertByteOrder( log->valid_speed_highest  );
@@ -206,7 +199,7 @@ Wbt202Sys* toWbt202Sys( unsigned char * data )
 
 		// If we are not running on a little-endian machine, we must explicitly
 		// convert the data to big-endian byte order.
-		if ( ! IS_LITTLE_ENDIAN )
+		if ( IS_BIG_ENDIAN )
 		{
 			convertByteOrder( sys->magic_begin        );
 			convertByteOrder( sys->cid                );

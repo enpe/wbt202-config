@@ -16,6 +16,11 @@
 // [1] http://stackoverflow.com/a/9852749
 // [2] http://solidsmoke.blogspot.com.br/2010/07/woes-of-structure-packing-pragma-pack.html
 
+// By default, assume hardware uses little endian byte order.
+#ifndef IS_BIG_ENDIAN
+#define IS_BIG_ENDIAN 0
+#endif // IS_BIG_ENDIAN
+
 #include <wbt202_gps.h>
 #include <wbt202_log.h>
 #include <wbt202_sys.h>
