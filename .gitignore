@@ -3,3 +3,4 @@ WBT202/*
 data/*
 doc/*
 CMakeLists.txt.user
+build/*

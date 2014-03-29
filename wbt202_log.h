@@ -106,7 +106,9 @@ struct Wbt202Log
 
 #pragma pack(pop)
 
+#ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG,
 		"Size of LOG struct does not match the required byte count." );
+#endif // COMPILER_SUPPORTS_CXX11
 
 #endif //  WBT202_LOG_H

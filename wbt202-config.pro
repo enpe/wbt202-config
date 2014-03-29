@@ -6,6 +6,8 @@ CONFIG -= qt
 # Change this to one if your hardware uses big endian byte order.
 DEFINES += IS_BIG_ENDIAN=0
 
+#QMAKE_CXXFLAGS += -std=c++11
+
 SOURCES += \
     main.cpp \
     wbt202_utils.cpp

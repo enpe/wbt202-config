@@ -163,7 +163,9 @@ struct Wbt202Gps
 
 #pragma pack(pop)
 
+#ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS,
 		"Size of GPS struct does not match the required byte count." );
+#endif // COMPILER_SUPPORTS_CXX11
 
 #endif // WBT202_GPS_H

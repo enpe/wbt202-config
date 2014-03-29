@@ -90,7 +90,9 @@ struct Wbt202Sys
 
 #pragma pack(pop)
 
+#ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS,
 		"Size of SYS struct does not match the required byte count." );
+#endif // COMPILER_SUPPORTS_CXX11
 
 #endif //  WBT202_SYS_H
