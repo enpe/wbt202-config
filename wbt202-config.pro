@@ -13,3 +13,6 @@ HEADERS += \
     wbt202_log.h \
     wbt202_sys.h \
     wbt202_utils.h
+
+OTHER_FILES += \
+    CMakeLists.txt

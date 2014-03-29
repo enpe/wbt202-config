@@ -2,3 +2,4 @@ WBT202/*
 *.pro.user
 data/*
 doc/*
+CMakeLists.txt.user
