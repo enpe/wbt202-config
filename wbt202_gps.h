@@ -78,10 +78,13 @@ struct Wbt202Gps
 	uint8_t   gps_mode;
 	uint8_t   unknown_01[166];
 	uint16_t  led_cycle;
-	uint8_t   unknown[2];
+	uint8_t   unknown[36];
 	// to be continued ...
 };
 
 #pragma pack(pop)
+
+static_assert( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS,
+		"Size of GPS struct does not match the required byte count." );
 
 #endif // WBT202_GPS_H

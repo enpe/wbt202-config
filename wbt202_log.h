@@ -103,4 +103,7 @@ struct Wbt202Log
 
 #pragma pack(pop)
 
+static_assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG,
+		"Size of LOG struct does not match the required byte count." );
+
 #endif //  WBT202_LOG_H

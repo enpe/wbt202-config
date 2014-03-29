@@ -83,4 +83,7 @@ struct Wbt202Sys
 
 #pragma pack(pop)
 
+static_assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS,
+		"Size of SYS struct does not match the required byte count." );
+
 #endif //  WBT202_SYS_H
