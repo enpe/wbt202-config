@@ -59,6 +59,95 @@
 //       sum1 += pSrc[ i + 2 ]
 //       sum2 += sum1
 //   }
+//
+//
+// - details about the contents of the 7 structs inside GPS.BIN:
+//   - NOTE: the marker "<unused>" means:
+//     - these bytes are not represented by any option in  the WBT_Tool
+//     - these bytes are note modified (only exception is overwrite by hard-coded default, see below)
+//     - these bytes, unless mentioned otherwise, can have arbitrary values as long as the checksum
+//       is correct
+//     -> we cannot deduce these bytes' meaning from the WBT_Tool
+//   - NOTE: the byte offsets listed for the "payload" are relative to the payload's first byte, i.e.
+//           offset 0x06 in the struct
+//
+// [ struct #0 ]
+// - offset in file: 0x16
+// - payload:
+//     0x00 uint8[3]   <unused>
+//     0x03 uint8      GPGLL [0=DISABLED, 1=ENABLED]
+//     0x04 uint8[4]   <unused>
+//
+// [ struct #1 ]
+// - offset in file: 0x26
+// - payload:
+//     0x00 uint8[3]   <unused>
+//     0x03 uint8      GPVTG [0=DISABLED, 1=ENABLED]
+//     0x04 uint8[4]   <unused>
+//
+// [ struct #2 ]
+// - offset in file: 0x36
+// - payload:
+//     0x00 uint8[3]   <unused>
+//     0x03 uint8      GPZDA [0=DISABLED, 1=ENABLED]
+//     0x04 uint8[4]   <unused>
+//
+// [ struct #3 ]
+// - offset in file: 0x46
+// - payload:
+//     0x00 uint8[10]  <unused>
+//     0x0A uint8      Navigation Min. SVs [3;6]
+//     0x0B uint8      <unused>
+//     0x0C uint8      Navigation Signal Min. Strength [5;50 dbHz]
+//     0x0D uint8      <unused>
+//     0x0E uint8      Initial Fix must be 3D [0=OFF, 1=ON]
+//     0x0F uint8[25]  <unused>
+//
+// [ struct #4 ]
+// - offset in file: 0x76
+// - payload:
+//     0x00 uint8[3]   <unused>
+//     0x03 uint8      Fix Mode [1=2D Only, 2=3D Only, 3=Auto 2D/3D]
+//     0x04 uint32     2D Fix Altitude (stored as mm) [0;18000 (m)]
+//     0x08 uint8[6]   <unused>
+//     0x0E uint16     PDOP Mask, [0;1000] (stored as 10 times the GUI value (gets rid of comma))
+//     0x10 uint16     TDOP Mask, [0;1000] (stored as 10 times the GUI value (gets rid of comma))
+//     0x12 uint16     P Accuracy Map [0;65535 (m)]
+//     0x14 uint16     T Accuracy Map [0;65535 (m)]
+//     0x16 uint8[14]  <unused>
+//
+// [ struct #5 ]
+// - offset in file: 0xA2
+// - payload:
+//     0x00 uint32     LED Blink cycle [2;10000 ms] (stored as µs)
+//     0x04 uint32     LED Off cycle [1;9999 ms] (stored as µs)
+//     0x08 uint8[12]  <unused>
+//
+// [ struct #6 ]
+// - offset in file: 0xBE
+// - payload:
+//     0x00 uint8      SBAS [0=OFF, 1=ON]
+//     0x01 uint8[7]   <unused>
+//
+//
+// - for a struct to pass the validity check:
+//   - the magic header value must match, and
+//   - the byte at offset 0x02 must be be 0 < x < 14, and
+//   - the computed checksum bytes must match the checksum bytes at the end of the struct
+// - if the check fails, the WBT_Tool 4.6 replaces the offending struct with a hard-coded
+//   default upon startup:
+//   - struct #0: B5 62 06 01 08 00 F0 01 00 00 00 00 00 01 01 2B
+//   - struct #1: B5 62 06 01 08 00 F0 05 00 00 00 00 00 01 05 47
+//   - struct #2: B5 62 06 01 08 00 F0 08 00 00 00 00 00 00 07 5B
+//   - struct #3: B5 62 06 23 28 00 00 00 4C 06 00 00 00 00 00 00 03 10 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 CA F9
+//   - struct #4: B5 62 06 24 24 00 FF FF 00 03 00 00 00 00 10 27 00 00 05 00 FA 00 FA 00 64 00 2C 01 1C 00 00 00 00 00 00 00 00 00 00 00 00 00 2C 98
+//   - struct #5: B5 62 06 07 14 00 40 42 0F 00 00 35 0C 00 01 01 00 00 32 00 00 00 00 00 00 00 27 47
+//   - struct #6: B5 62 06 16 08 00 00 03 03 00 00 00 00 00 2A B1
+//
+//
+// - the flags GPRMC, GPGGA, GPGSA, GPGSV in group "NMEA Output" cannot be changed in the GUI 
+//   - none of the bytes in GPS.SYS seems to affect them either
+//   - the WBT manual says they are activated by default because they are required for operation
 
 
 #include <stdint.h>
