@@ -48,6 +48,18 @@
 //       sum1 += pSrc[ i + 6 ]
 //       sum2 += sum1
 //   }
+//
+//   ... or, assuming a little-endian machine and unmodified struct data (i.e. the byte stream
+//   exactly as in the file), in a more concise form:
+//
+//   uint8_t sum1 = 0;
+//   uint8_t sum2 = 0;
+//   for ( int i = 0; i < len + 4; ++i )
+//   {
+//       sum1 += pSrc[ i + 2 ]
+//       sum2 += sum1
+//   }
+
 
 #include <stdint.h>
 
