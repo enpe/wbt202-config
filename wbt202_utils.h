@@ -6,6 +6,7 @@
 #include <wbt202.h>
 
 #include <iostream>
+#include <vector>
 
 /** @name Serialize the structs.
  * @{
@@ -40,21 +41,21 @@ unsigned char* toBinary( const Wbt202Sys * sys );
  * The array must be @c BYTE_COUNT_GPS bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-Wbt202Gps* toWbt202Gps( unsigned char * data );
+Wbt202Gps* toWbt202Gps( const std::vector<char> data );
 
 /** @brief Interpret array as LOG data.
  *
  * The array must be @c BYTE_COUNT_LOG bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-Wbt202Log* toWbt202Log( unsigned char * data );
+Wbt202Log* toWbt202Log( const std::vector<char> & data );
 
 /** @brief Interpret array as SYS data.
  *
  * The array must be @c BYTE_COUNT_SYS bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-Wbt202Sys* toWbt202Sys( unsigned char * data );
+Wbt202Sys* toWbt202Sys( const std::vector<char> & data );
 
 /** @} */
 

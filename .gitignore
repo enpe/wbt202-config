@@ -4,3 +4,4 @@ data/*
 doc/*
 CMakeLists.txt.user
 build/*
+.DS_Store

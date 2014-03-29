@@ -146,30 +146,30 @@ unsigned char* toBinary( const Wbt202Sys * sys )
 	return toBinary< Wbt202Sys >( sys );
 }
 
-Wbt202Gps * toWbt202Gps( unsigned char * data )
+Wbt202Gps * toWbt202Gps( const std::vector<char> data )
 {
-	assert( data );
+	assert( ! data.empty() );
 
 	// TODO Missing implementation.
 
 	return NULL;
 }
 
-Wbt202Log* toWbt202Log( unsigned char * data )
+Wbt202Log* toWbt202Log( const std::vector<char> & data )
 {
-	assert( data );
+	assert( ! data.empty() );
+	assert( data.size() == BYTE_COUNT_LOG );
+	assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
 
 	Wbt202Log * log = NULL;
-	int size_data = sizeof(data) / sizeof(char);
 
-	assert( size_data = BYTE_COUNT_LOG );
-	assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
-	if ( size_data == BYTE_COUNT_LOG )
+	if ( data.size() == BYTE_COUNT_LOG )
 	{
-		log = new Wbt202Log( *( reinterpret_cast<Wbt202Log*>( data ) ) );
+		log = new Wbt202Log( *(
+			reinterpret_cast<const Wbt202Log*>( data.data() ) ) );
 
-		// If we are not running on a little-endian machine, we must explicitely convert the data to
-		// big-endian byte order.
+		// If we are not running on a little-endian machine, we must explicitely
+		// convert the data to big-endian byte order.
 		if ( IS_BIG_ENDIAN )
 		{
 			convertByteOrder( log->magic_begin          );
@@ -190,18 +190,18 @@ Wbt202Log* toWbt202Log( unsigned char * data )
 	return log;
 }
 
-Wbt202Sys* toWbt202Sys( unsigned char * data )
+Wbt202Sys* toWbt202Sys( const std::vector<char> & data )
 {
-	assert( data );
+	assert( ! data.empty() );
+	assert( data.size() == BYTE_COUNT_SYS );
+	assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS );
 
 	Wbt202Sys * sys = NULL;
-	int size_data = sizeof(data) / sizeof(char);
 
-	assert( size_data = BYTE_COUNT_SYS );
-	assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS );
-	if ( size_data == BYTE_COUNT_SYS )
+	if ( data.size() == BYTE_COUNT_SYS )
 	{
-		sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
+		sys = new Wbt202Sys( *(
+			reinterpret_cast<const Wbt202Sys*>( data.data() ) ) );
 
 		// If we are not running on a little-endian machine, we must explicitly
 		// convert the data to big-endian byte order.
