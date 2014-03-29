@@ -6,22 +6,15 @@
 //                              GPS LED cycle [2;10K (ms)]
 //                              GPS LED off-cycle [2;10K (ms)]
 //                              SBAS [0=OFF,1=ON]
-// 0x1		0x1		uchar		Gps Mode
-// 0x2		0xa7				UNKNOWN
-// 0xa8		0xab	uint		GPS LED cycle [2;10K (ms)] (stored as musec)
-// 0xac		0xaf	uint		GPS LED off-cycle [2;10K (ms)] (stored as musec)
-// 0xaf		0xbb				UNKNOWN
-// 0xbc		0xbd	uchar2		CHECKSUM ?!?
-//                              GPS LED cycle [2;10K (ms)] +
-//                              GPS LED off-cycle [2;10K (ms)]
-// 0xbe		0xc3				UNKNOWN
-// 0xc4		0xc4	uchar		SBAS [0=OFF,1=ON]
-// 0xc5		0xcb				UNKNOWN
-// 0xcc		0xcd				SBAS [45354=OFF,47403=ON]
-
-// GPVTG	0x2f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [18181=DISABLED,19462=ENABLED]
-// GPZDA	0x3f [0=DISABLED, 1=ENABLED], 0x44 0x45 ushort [23303=DISABLED,24584=ENABLED]
-// GPGLL	0x1f [0=DISABLED, 1=ENABLED], 0x34 0x35 ushort [11009=DISABLED,12290=ENABLED]
+// 0x01		0x01	uint8		GPS Mode
+//                                0=High Accuracy
+//                                1=Middle Accuracy
+//                                2=Factory setting
+//                                3=Middle Acquisition time
+//                                4=Fast Acquisition time
+//                                5=User define
+// 0x02		0x15	uint8[]		UNKNOWN, unused by WBT_Tool 4.6
+// 0x16		...		...			see detailed description of structs below
 
 // - the GPS.BIN contains several structs of different sizes, easy to spot by looking for the magic header (see below)
 // - values in the following description are big-endian
