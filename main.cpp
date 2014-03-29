@@ -14,7 +14,7 @@
 
 #define OFFSET( p1, p2 ) reinterpret_cast<size_t>( p1 ) - reinterpret_cast<size_t>( p2 )
 
-std::string data_path = "./";
+std::string data_path = "./WBT202/SYS/";
 
 int main( int argc, char ** argv )
 {

@@ -51,19 +51,19 @@ void convertByteOrder( uint32_t & n )
  * @{
  */
 
-/** Encode a password. */
+/** @brief Encode a password. */
 uint32_t encodePassword( uint32_t p )
 {
 	return 152 * ( p + 11977 );
 }
 
-/** Decode a password */
+/** @brief Decode a password */
 uint32_t decodePassword( uint32_t p )
 {
 	return ( p / 152 ) - 11977;
 }
 
-/** Check if a password has been set. */
+/** @brief Check if a password has been set. */
 bool enabledPassword( uint32_t p )
 {
 	return p != DEFAULT_PASSWORD;
@@ -106,6 +106,10 @@ bool isValid( const Wbt202Sys * sys )
 	return valid;
 }
 
+/** @brief Serialize the device settings.
+ *
+ * @note Only use with @c Wbt202Gps, @c Wbt202Log, and @c Wbt202Sys.
+ */
 template <typename T>
 unsigned char* toBinary( const T * t )
 {
@@ -159,6 +163,7 @@ Wbt202Log* toWbt202Log( unsigned char * data )
 	int size_data = sizeof(data) / sizeof(char);
 
 	assert( size_data = BYTE_COUNT_LOG );
+	assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
 	if ( size_data == BYTE_COUNT_LOG )
 	{
 		log = new Wbt202Log( *( reinterpret_cast<Wbt202Log*>( data ) ) );
@@ -193,6 +198,7 @@ Wbt202Sys* toWbt202Sys( unsigned char * data )
 	int size_data = sizeof(data) / sizeof(char);
 
 	assert( size_data = BYTE_COUNT_SYS );
+	assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS );
 	if ( size_data == BYTE_COUNT_SYS )
 	{
 		sys = new Wbt202Sys( *( reinterpret_cast<Wbt202Sys*>( data ) ) );
