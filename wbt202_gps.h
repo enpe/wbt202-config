@@ -3,13 +3,15 @@
 
 // Notes on GPS.BIN
 //
-// - values are stored in little-endian byte order inside the file (least significant byte first)
+// - values are stored in little-endian byte order inside the file (least
+//   significant byte first)
 // - values in these notes are given most significant byte first
 // - NOTE: the marker "<unused>" means:
-//     - these bytes are not represented by any option in  the WBT_Tool
-//     - these bytes are note modified (only exception is overwrite by hard-coded default, see below)
-//     - these bytes, unless mentioned otherwise, can have arbitrary values as long as the checksum
-//       is correct
+//     - these bytes are not represented by any option in the WBT_Tool.exe
+//     - these bytes are not modified (only exception is overwrite by hard-coded
+//       default, see below)
+//     - these bytes, unless mentioned otherwise, can have arbitrary values as
+//       long as the checksum is correct
 //     -> we cannot deduce these bytes' meaning from the WBT_Tool
 //
 // Start    Type        Name/Description
@@ -26,8 +28,8 @@
 // 0x16     ...         see detailed description of structs below
 //
 //
-// - the file contains several structs of different sizes, easy to spot by looking for the magic
-//   header (see below), and they look like this:
+// - the file contains several structs of different sizes, easy to spot by
+//   looking for the magic header (see below), and they look like this:
 //
 //  Offset  Size      Value/Description
 //  0x00    uint16    magic header value 0x62B5
@@ -39,11 +41,11 @@
 //  0x07+N  uint8     checksum byte 2
 //
 // - the two checksum bytes are computed as follows:
-//     - NOTE: all summands are 8-bit, so they can (and are supposed to) overflow during the
-//             additions
-//     - NOTE: We are assuming a little-endian machine and unmodified struct data, i.e. the byte
-//             stream exactly as in the file. Keep this in mind when writing for big-endian
-//             machines!
+//     - NOTE: all summands are 8-bit, so they can (and are supposed to)
+//             overflow during the additions
+//     - NOTE: We are assuming a little-endian machine and unmodified struct
+//             data, i.e. the byte stream exactly as in the file. Keep this in
+//             mind when writing for big-endian machines!
 //
 //   uint8_t * pSrc = address of struct's first byte
 //   uint16_t len = value N from the table above
@@ -57,8 +59,8 @@
 //
 //
 // - details about the contents of the 7 structs inside the file:
-//     - NOTE: the byte offsets listed for the "payload" are relative to the payload's first byte,
-//             i.e. offset 0x06 in the struct
+//     - NOTE: the byte offsets listed for the "payload" are relative to the
+//             payload's first byte, i.e. offset 0x06 in the struct
 //
 // [ struct #0 ]
 // - offset in file: 0x16
@@ -99,8 +101,10 @@
 //     0x03 uint8      Fix Mode [1=2D Only, 2=3D Only, 3=Auto 2D/3D]
 //     0x04 uint32     2D Fix Altitude (stored as mm) [0;18000 (m)]
 //     0x08 uint8[6]   <unused>
-//     0x0E uint16     PDOP Mask, [0;1000] (stored as 10 times the GUI value (gets rid of comma))
-//     0x10 uint16     TDOP Mask, [0;1000] (stored as 10 times the GUI value (gets rid of comma))
+//     0x0E uint16     PDOP Mask, [0;1000] (stored as 10 times the GUI value
+//                     (gets rid of comma))
+//     0x10 uint16     TDOP Mask, [0;1000] (stored as 10 times the GUI value
+//                     (gets rid of comma))
 //     0x12 uint16     P Accuracy Map [0;65535 (m)]
 //     0x14 uint16     T Accuracy Map [0;65535 (m)]
 //     0x16 uint8[14]  <unused>
@@ -122,9 +126,10 @@
 // - for a struct to pass the validity check:
 //     - the magic header value must match, and
 //     - the byte at offset 0x02 must be be 0 < x < 14, and
-//     - the computed checksum bytes must match the checksum bytes at the end of the struct
-// - if the check fails, WBT_Tool 4.6 replaces the offending struct with a hard-coded default upon
-//   application startup:
+//     - the computed checksum bytes must match the checksum bytes at the end of
+//       the struct
+// - if the check fails, WBT_Tool 4.6 replaces the offending struct with a
+//   hard-coded default upon application startup:
 //     - struct #0: B5 62 06 01 08 00 F0 01 00 00 00 00 00 01 01 2B
 //     - struct #1: B5 62 06 01 08 00 F0 05 00 00 00 00 00 01 05 47
 //     - struct #2: B5 62 06 01 08 00 F0 08 00 00 00 00 00 00 07 5B
@@ -134,11 +139,11 @@
 //     - struct #6: B5 62 06 16 08 00 00 03 03 00 00 00 00 00 2A B1
 //
 //
-// - the flags GPRMC, GPGGA, GPGSA, GPGSV in group "NMEA Output" cannot be changed in the GUI 
+// - the flags GPRMC, GPGGA, GPGSA, GPGSV in group "NMEA Output" cannot be
+//   changed in the GUI
 //     - none of the bytes in the file seems to affect them either
-//     - the WBT manual says they are activated by default because they are basic requirements for
-//       GPS operation
-
+//     - the WBT manual says they are activated by default because they are
+//       basic requirements for GPS operation
 
 #include <stdint.h>
 
@@ -165,7 +170,7 @@ struct Wbt202Gps
 
 #ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS,
-		"Size of GPS struct does not match the required byte count." );
+	"Size of GPS struct does not match the required byte count." );
 #endif // COMPILER_SUPPORTS_CXX11
 
 #endif // WBT202_GPS_H

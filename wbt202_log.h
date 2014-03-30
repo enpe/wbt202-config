@@ -3,7 +3,8 @@
 
 // Notes on LOG.BIN
 //
-// - values are stored in little-endian byte order inside the file (least significant byte first)
+// - values are stored in little-endian byte order inside the file (least
+//   significant byte first)
 // - values in these notes are given most significant byte first
 //
 // Start    Type        Name/Description
@@ -108,7 +109,7 @@ struct Wbt202Log
 
 #ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG,
-		"Size of LOG struct does not match the required byte count." );
+    "Size of LOG struct does not match the required byte count." );
 #endif // COMPILER_SUPPORTS_CXX11
 
 #endif //  WBT202_LOG_H
