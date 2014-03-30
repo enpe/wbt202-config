@@ -1,8 +1,3 @@
-// Memory alignment
-//http://stackoverflow.com/a/9852749
-//http://solidsmoke.blogspot.com.br/2010/07/woes-of-structure-packing-pragma-pack.html
-//#pragma pack(1)
-
 #include "wbt202.h"
 #include "wbt202_utils.h"
 
