@@ -2,10 +2,8 @@
 #define WBT202_GPS_H
 
 // START	END		TYPE		NAME
-// 0x0		0x0		uchar1		Dirty flag [0=CLEAN,1=CHANGED]
-//                              GPS LED cycle [2;10K (ms)]
-//                              GPS LED off-cycle [2;10K (ms)]
-//                              SBAS [0=OFF,1=ON]
+// 0x00		0x00	uint8		always set to 1 by WBT_Tool prior to writing the GPS.BIN file
+//                              Maybe a dirty flag to indicate device restart?
 // 0x01		0x01	uint8		GPS Mode
 //                                0=High Accuracy
 //                                1=Middle Accuracy
