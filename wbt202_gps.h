@@ -22,8 +22,8 @@
 //
 //  offset  size      value/description
 //  0x00    uint16    magic header value 0x62B5
-//  0x02    uint8     must be 0 < x < 14
-//  0x03    uint8
+//  0x02    uint8     <unused>, must be 0 < x < 14
+//  0x03    uint8     <unused>
 //  0x04    uint16    N: payload length in bytes
 //  0x06    uint8[N]  payload
 //  0x06+N  uint8     checksum byte 1
