@@ -1,24 +1,35 @@
 #ifndef WBT202_GPS_H
 #define WBT202_GPS_H
 
-// START	END		TYPE		NAME
-// 0x00		0x00	uint8		always set to 1 by WBT_Tool prior to writing the GPS.BIN file
-//                              Maybe a dirty flag to indicate device restart?
-// 0x01		0x01	uint8		GPS Mode
-//                                0=High Accuracy
-//                                1=Middle Accuracy
-//                                2=Factory setting
-//                                3=Middle Acquisition time
-//                                4=Fast Acquisition time
-//                                5=User define
-// 0x02		0x15	uint8[]		UNKNOWN, unused by WBT_Tool 4.6
-// 0x16		...		...			see detailed description of structs below
-
-// - the GPS.BIN contains several structs of different sizes, easy to spot by looking for the magic header (see below)
-// - values in the following description are big-endian
-// - the structs look like this:
+// Notes on GPS.BIN
 //
-//  offset  size      value/description
+// - values are stored in little-endian byte order inside the file (least significant byte first)
+// - values in these notes are given most significant byte first
+// - NOTE: the marker "<unused>" means:
+//     - these bytes are not represented by any option in  the WBT_Tool
+//     - these bytes are note modified (only exception is overwrite by hard-coded default, see below)
+//     - these bytes, unless mentioned otherwise, can have arbitrary values as long as the checksum
+//       is correct
+//     -> we cannot deduce these bytes' meaning from the WBT_Tool
+//
+// Start    Type        Name/Description
+// 0x00     uint8       always set to 1 by WBT_Tool prior to writing the file
+//                        Maybe a dirty flag to indicate device restart?
+// 0x01     uint8       GPS Mode:
+//                          0=High Accuracy
+//                          1=Middle Accuracy
+//                          2=Factory setting
+//                          3=Middle Acquisition time
+//                          4=Fast Acquisition time
+//                          5=User define
+// 0x02     uint8[]     UNKNOWN, not used by WBT_Tool 4.6
+// 0x16     ...         see detailed description of structs below
+//
+//
+// - the file contains several structs of different sizes, easy to spot by looking for the magic
+//   header (see below), and they look like this:
+//
+//  Offset  Size      Value/Description
 //  0x00    uint16    magic header value 0x62B5
 //  0x02    uint8     <unused>, must be 0 < x < 14
 //  0x03    uint8     <unused>
@@ -28,21 +39,14 @@
 //  0x07+N  uint8     checksum byte 2
 //
 // - the two checksum bytes are computed as follows:
-//   - note that all summands are 8-bit, so they can (and are supposed to) overflow during the additions
+//     - NOTE: all summands are 8-bit, so they can (and are supposed to) overflow during the
+//             additions
+//     - NOTE: We are assuming a little-endian machine and unmodified struct data, i.e. the byte
+//             stream exactly as in the file. Keep this in mind when writing for big-endian
+//             machines!
 //
 //   uint8_t * pSrc = address of struct's first byte
 //   uint16_t len = value N from the table above
-//   uint8_t sum1 = pSrc[ 2 ] + pSrc[ 3 ] + ( len & 0xFF ) + ( ( len & 0xFF00 ) >> 8 );
-//   uint8_t sum2 = sum1 + 3 * pSrc[ 2 ] + 2 * pSrc[ 3 ] + ( len & 0xFF );
-//   for ( int i = 0; i < len; ++i )
-//   {
-//       sum1 += pSrc[ i + 6 ]
-//       sum2 += sum1
-//   }
-//
-//   ... or, assuming a little-endian machine and unmodified struct data (i.e. the byte stream
-//   exactly as in the file), in a more concise form:
-//
 //   uint8_t sum1 = 0;
 //   uint8_t sum2 = 0;
 //   for ( int i = 0; i < len + 4; ++i )
@@ -52,15 +56,9 @@
 //   }
 //
 //
-// - details about the contents of the 7 structs inside GPS.BIN:
-//   - NOTE: the marker "<unused>" means:
-//     - these bytes are not represented by any option in  the WBT_Tool
-//     - these bytes are note modified (only exception is overwrite by hard-coded default, see below)
-//     - these bytes, unless mentioned otherwise, can have arbitrary values as long as the checksum
-//       is correct
-//     -> we cannot deduce these bytes' meaning from the WBT_Tool
-//   - NOTE: the byte offsets listed for the "payload" are relative to the payload's first byte, i.e.
-//           offset 0x06 in the struct
+// - details about the contents of the 7 structs inside the file:
+//     - NOTE: the byte offsets listed for the "payload" are relative to the payload's first byte,
+//             i.e. offset 0x06 in the struct
 //
 // [ struct #0 ]
 // - offset in file: 0x16
@@ -122,23 +120,24 @@
 //
 //
 // - for a struct to pass the validity check:
-//   - the magic header value must match, and
-//   - the byte at offset 0x02 must be be 0 < x < 14, and
-//   - the computed checksum bytes must match the checksum bytes at the end of the struct
-// - if the check fails, the WBT_Tool 4.6 replaces the offending struct with a hard-coded
-//   default upon startup:
-//   - struct #0: B5 62 06 01 08 00 F0 01 00 00 00 00 00 01 01 2B
-//   - struct #1: B5 62 06 01 08 00 F0 05 00 00 00 00 00 01 05 47
-//   - struct #2: B5 62 06 01 08 00 F0 08 00 00 00 00 00 00 07 5B
-//   - struct #3: B5 62 06 23 28 00 00 00 4C 06 00 00 00 00 00 00 03 10 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 CA F9
-//   - struct #4: B5 62 06 24 24 00 FF FF 00 03 00 00 00 00 10 27 00 00 05 00 FA 00 FA 00 64 00 2C 01 1C 00 00 00 00 00 00 00 00 00 00 00 00 00 2C 98
-//   - struct #5: B5 62 06 07 14 00 40 42 0F 00 00 35 0C 00 01 01 00 00 32 00 00 00 00 00 00 00 27 47
-//   - struct #6: B5 62 06 16 08 00 00 03 03 00 00 00 00 00 2A B1
+//     - the magic header value must match, and
+//     - the byte at offset 0x02 must be be 0 < x < 14, and
+//     - the computed checksum bytes must match the checksum bytes at the end of the struct
+// - if the check fails, WBT_Tool 4.6 replaces the offending struct with a hard-coded default upon
+//   application startup:
+//     - struct #0: B5 62 06 01 08 00 F0 01 00 00 00 00 00 01 01 2B
+//     - struct #1: B5 62 06 01 08 00 F0 05 00 00 00 00 00 01 05 47
+//     - struct #2: B5 62 06 01 08 00 F0 08 00 00 00 00 00 00 07 5B
+//     - struct #3: B5 62 06 23 28 00 00 00 4C 06 00 00 00 00 00 00 03 10 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 CA F9
+//     - struct #4: B5 62 06 24 24 00 FF FF 00 03 00 00 00 00 10 27 00 00 05 00 FA 00 FA 00 64 00 2C 01 1C 00 00 00 00 00 00 00 00 00 00 00 00 00 2C 98
+//     - struct #5: B5 62 06 07 14 00 40 42 0F 00 00 35 0C 00 01 01 00 00 32 00 00 00 00 00 00 00 27 47
+//     - struct #6: B5 62 06 16 08 00 00 03 03 00 00 00 00 00 2A B1
 //
 //
 // - the flags GPRMC, GPGGA, GPGSA, GPGSV in group "NMEA Output" cannot be changed in the GUI 
-//   - none of the bytes in GPS.SYS seems to affect them either
-//   - the WBT manual says they are activated by default because they are required for operation
+//     - none of the bytes in the file seems to affect them either
+//     - the WBT manual says they are activated by default because they are basic requirements for
+//       GPS operation
 
 
 #include <stdint.h>
