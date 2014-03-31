@@ -1,5 +1,5 @@
-#ifndef WBT202_GPS_DETAILS_H
-#define WBT202_GPS_DETAILS_H
+#ifndef WBT202_GPS_BLOCKS_H
+#define WBT202_GPS_BLOCKS_H
 
 #include <stdint.h>
 
@@ -119,4 +119,4 @@ struct Block_BE
 
 #pragma pack(pop) // Restore previous memory alignment settings.
 
-#endif // WBT202_GPS_DETAILS_H
+#endif // WBT202_GPS_BLOCKS_H
