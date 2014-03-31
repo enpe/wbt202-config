@@ -32,17 +32,14 @@ void testGps( std::string path )
 	std::cout << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
-	if ( buffer.empty() )
-		return;
+	Wbt202Gps * gps = toWbt202Gps( buffer );
 
-	Wbt202Log * log = toWbt202Log( buffer );
-
-	if ( log )
-		std::cout << *log << std::endl;
+	if ( gps )
+		std::cout << *gps << std::endl;
 	else
 		std::cout << "Cannot display the contents of " << filename << std::endl;
 
-	delete log;
+	delete gps;
 }
 
 void testLog( std::string path )
@@ -94,7 +91,7 @@ int main( int argc, char ** argv )
 	std::cout << " endian byte order." << std::endl;
 
 	// Test-load each binary config file.
-//	testGps( dataPath );
+	testGps( dataPath );
 	testLog( dataPath );
 	testSys( dataPath );
 

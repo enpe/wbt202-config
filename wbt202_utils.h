@@ -41,7 +41,7 @@ unsigned char* toBinary( const Wbt202Sys * sys );
  * The array must be @c BYTE_COUNT_GPS bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-Wbt202Gps* toWbt202Gps( const std::vector<char> data );
+Wbt202Gps* toWbt202Gps( const std::vector<char> & data );
 
 /** @brief Interpret array as LOG data.
  *

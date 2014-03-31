@@ -161,12 +161,16 @@ static const size_t BYTE_COUNT_GPS = 206;
  */
 struct Wbt202Gps
 {
-	uint8_t   dirty;
-	uint8_t   gps_mode;
-	uint8_t   unknown_01[166];
-	uint16_t  led_cycle;
-	uint8_t   unknown[36];
-	// to be continued ...
+	uint8_t   dirty;          ///< 0x00 dirty flag
+	uint8_t   gps_mode;       ///< 0x01 GPS mode
+	uint8_t   unknown_02[20]; ///< 0x02 <unknown>
+	Block_16  block_16;       ///< 0x16 struct #0
+	Block_26  block_26;       ///< 0x26 struct #1
+	Block_36  block_36;       ///< 0x36 struct #2
+	Block_46  block_46;       ///< 0x46 struct #3
+	Block_76  block_76;       ///< 0x76 struct #4
+	Block_A2  block_A2;       ///< 0xA2 struct #5
+	Block_BE  block_BE;       ///< 0xBE struct #6
 };
 
 #pragma pack(pop) // Restore previous memory alignment settings.

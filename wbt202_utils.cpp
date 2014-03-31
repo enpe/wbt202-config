@@ -129,6 +129,21 @@ unsigned char* toBinary( const T * t )
 	return data;
 }
 
+template <typename T>
+std::string toString( T value )
+{
+	std::ostringstream oss;
+	oss << value;
+
+	return oss.str();
+}
+
+template <>
+std::string toString<uint8_t>( uint8_t value )
+{
+	return toString( static_cast<int>( value ) );
+}
+
 } // unnamed namespace
 
 
@@ -146,13 +161,51 @@ unsigned char* toBinary( const Wbt202Sys * sys )
 	return toBinary< Wbt202Sys >( sys );
 }
 
-Wbt202Gps * toWbt202Gps( const std::vector<char> data )
+Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 
 	// TODO Missing implementation.
+	Wbt202Gps * gps = NULL;
 
-	return NULL;
+	if ( data.size() == BYTE_COUNT_GPS )
+	{
+		gps = new Wbt202Gps( *(
+			reinterpret_cast<const Wbt202Gps*>( data.data() ) ) );
+
+		if ( IS_BIG_ENDIAN )
+		{
+			convertByteOrder( gps->block_16.magic                   );
+			convertByteOrder( gps->block_16.length                  );
+
+			convertByteOrder( gps->block_26.magic                   );
+			convertByteOrder( gps->block_26.length                  );
+
+			convertByteOrder( gps->block_36.magic                   );
+			convertByteOrder( gps->block_36.length                  );
+
+			convertByteOrder( gps->block_46.magic                   );
+			convertByteOrder( gps->block_46.length                  );
+
+			convertByteOrder( gps->block_76.magic                   );
+			convertByteOrder( gps->block_76.length                  );
+			convertByteOrder( gps->block_76.payload.fix_altitude_2d );
+			convertByteOrder( gps->block_76.payload.pdop_mask       );
+			convertByteOrder( gps->block_76.payload.tdop_mask       );
+			convertByteOrder( gps->block_76.payload.p_accuracy_map  );
+			convertByteOrder( gps->block_76.payload.t_accuracy_map  );
+
+			convertByteOrder( gps->block_A2.magic                   );
+			convertByteOrder( gps->block_A2.length                  );
+			convertByteOrder( gps->block_A2.payload.led_blink_cycle );
+			convertByteOrder( gps->block_A2.payload.led_off_cycle   );
+
+			convertByteOrder( gps->block_BE.magic                   );
+			convertByteOrder( gps->block_BE.length                  );
+		}
+	}
+
+	return gps;
 }
 
 Wbt202Log* toWbt202Log( const std::vector<char> & data )
@@ -225,9 +278,54 @@ Wbt202Sys* toWbt202Sys( const std::vector<char> & data )
 
 std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
 {
-	// TODO Missing implementation.
-	os << "MISSING IMPLEMENTATION" << std::endl;
-	os << gps.dirty << std::endl;
+	struct Field
+	{
+		std::string name;
+		std::string value;
+		std::string unit;
+	};
+
+	const Payload_16 & p_16 = gps.block_16.payload;
+	const Payload_26 & p_26 = gps.block_26.payload;
+	const Payload_36 & p_36 = gps.block_36.payload;
+	const Payload_46 & p_46 = gps.block_46.payload;
+	const Payload_76 & p_76 = gps.block_76.payload;
+	const Payload_A2 & p_A2 = gps.block_A2.payload;
+	const Payload_BE & p_BE = gps.block_BE.payload;
+
+	Field fields[] =
+	{
+		{ "dirty",                  toString( gps.dirty ? "true" : "false" ), ""     },
+		{ "mode",                   toString( gps.gps_mode                 ), ""     }, // TODO Match value to string.
+		{ "gpgll",                  toString( p_16.gpgll ? "on" : "off"    ), ""     },
+		{ "gpvtg",                  toString( p_26.gpvtg ? "on" : "off"    ), ""     },
+		{ "gpzda",                  toString( p_36.gpzda ? "on" : "off"    ), ""     },
+		{ "min_visible_satellites", toString( p_46.min_visible_satellites  ), ""     },
+		{ "min_signal_strength",    toString( p_46.min_signal_strength     ), "dbHz" },
+		{ "initial_fix_3d",         toString( p_46.initial_fix_3d          ), ""     },
+		{ "fix_mode",               toString( p_76.fix_mode                ), ""     }, // TODO Match value to string.
+		{ "fix_altitude_2d",        toString( p_76.fix_altitude_2d         ), "m"    },
+		{ "pdop_mask",              toString( p_76.pdop_mask               ), ""     },
+		{ "tdop_mask",              toString( p_76.tdop_mask               ), ""     },
+		{ "p_accuracy_map",         toString( p_76.p_accuracy_map          ), "m"    },
+		{ "t_accuracy_map",         toString( p_76.t_accuracy_map          ), "m"    },
+		{ "led_blink_cycle",        toString( p_A2.led_blink_cycle         ), "µs"   },
+		{ "led_off_cycle",          toString( p_A2.led_off_cycle           ), "µs"   },
+		{ "sbas",                   toString( p_BE.sbas ? "on" : "off"     ), ""     }
+	};
+	int count = sizeof( fields ) / sizeof( Field );
+
+	for ( int i = 0; i < count; ++i )
+	{
+		os << std::left << std::setw( 30 ) << std::setfill( '.' )
+			<< fields[i].name
+			<< fields[i].value
+			<< " " << fields[i].unit;
+
+		if ( i < (count-1) )
+			os << std::endl;
+
+	}
 
 	return os;
 }
