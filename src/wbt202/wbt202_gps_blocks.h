@@ -70,17 +70,17 @@ static const uint8_t default_block_BE[] =
 /** @brief Contains variables that appear in all blocks before their payload. */
 struct BlockHeader
 {
-	uint16_t   magic;       ///< 0x00    uint16    magic header value 0x62B5
-	uint8_t    unused_01;   ///< 0x02    uint8     <unused>, must be 0 < x < 14
-	uint8_t    unused_02;   ///< 0x03    uint8     <unused>
-	uint16_t   length;      ///< 0x04    uint16    N: payload length in bytes
+	uint16_t   magic;       ///< 0x00 magic header value 0x62B5
+	uint8_t    unused_01;   ///< 0x02 <unused>, must be 0 < x < 14
+	uint8_t    unused_02;   ///< 0x03 <unused>
+	uint16_t   length;      ///< 0x04 N: payload length in bytes
 };
 
 /** @brief Contains variables that appear in all blocks after their payload. */
 struct BlockFooter
 {
-	uint8_t    checksum_01; ///< 0x06+N  uint8     checksum byte 1
-	uint8_t    checksum_02; ///< 0x07+N  uint8     checksum byte 2
+	uint8_t    checksum_01; ///< 0x06+N checksum byte 1
+	uint8_t    checksum_02; ///< 0x07+N checksum byte 2
 };
 
 struct Block_16

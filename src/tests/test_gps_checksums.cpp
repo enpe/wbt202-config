@@ -1,3 +1,13 @@
+/**
+  * @file test_gps_checksums.cpp
+  *
+  * @brief Ensures that the checksums in @c Wbt202Gps are computed correctly.
+  *
+  * This test requires the pathname of a (valid) GPS.BIN. The file is loaded
+  * and a new instance is cloned. The checksums are computed for that second
+  * instance and compared to the original ones. If the checksums are identical,
+  * the test is considered as passed, otherwise as failed.
+  */
 
 #include <wbt202/wbt202.h>
 #include <wbt202/wbt202_utils.h>
@@ -5,9 +15,8 @@
 #include <iostream>
 #include <string>
 
-bool testGpsChecksums( std::string path )
+bool testGpsChecksums( std::string filename )
 {
-	std::string filename = path + "/GPS.BIN";
 	std::cout << std::endl << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
