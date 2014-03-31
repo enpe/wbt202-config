@@ -59,6 +59,16 @@ Wbt202Sys* toWbt202Sys( const std::vector<char> & data );
 
 /** @} */
 
+/** @brief Computes the checksums for GPS.BIN.
+ *
+ * Computes the checksum for each block in GPS.BIN and stores the results in the
+ * corresponding variables (cf. @c BlockFooter) of the @c Wbt202Gps instance.
+ *
+ * Details on how the checksum is computed can be found in the source of
+ * @c wbt202_gps.h.
+ */
+void setChecksum( Wbt202Gps & gps );
+
 /** @name Overloaded operators for console output.
  * @{
  */

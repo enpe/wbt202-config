@@ -185,6 +185,26 @@ std::ostream& operator<<( std::ostream & os, const std::vector<Field> & fields )
 	return os;
 }
 
+/** @brief Helper function to compute the checksums in @c Wbt202Gps. */
+void setChecksum(
+	uint8_t & checksum_01,
+	uint8_t & checksum_02,
+	const uint8_t * pSrc,
+	uint16_t len )
+{
+	uint8_t sum1 = 0;
+	uint8_t sum2 = 0;
+
+	for ( int i = 0; i < len + 4; ++i )
+	{
+		sum1 += pSrc[ i + 2 ];
+		sum2 += sum1;
+	}
+
+	checksum_01 = sum1;
+	checksum_02 = sum2;
+}
+
 } // unnamed namespace
 
 Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
@@ -301,6 +321,40 @@ Wbt202Sys* toWbt202Sys( const std::vector<char> & data )
 
 	return sys;
 }
+
+void setChecksum( Wbt202Gps & gps )
+{
+	struct Block
+	{
+		uint8_t &       checksum_01;
+		uint8_t &       checksum_02;
+		const uint8_t * pSrc;
+		uint16_t        len;
+
+	};
+
+	Block blocks[] =
+	{
+		{ gps.block_16.footer.checksum_01, gps.block_16.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_16 ), gps.block_16.header.length },
+		{ gps.block_26.footer.checksum_01, gps.block_26.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_26 ), gps.block_26.header.length },
+		{ gps.block_36.footer.checksum_01, gps.block_36.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_36 ), gps.block_36.header.length },
+		{ gps.block_46.footer.checksum_01, gps.block_46.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_46 ), gps.block_46.header.length },
+		{ gps.block_76.footer.checksum_01, gps.block_76.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_76 ), gps.block_76.header.length },
+		{ gps.block_A2.footer.checksum_01, gps.block_A2.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_A2 ), gps.block_A2.header.length },
+		{ gps.block_BE.footer.checksum_01, gps.block_BE.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_BE ), gps.block_BE.header.length }
+	};
+	int count = sizeof( blocks ) / sizeof( Block );
+
+	for ( int i = 0; i < count; ++i )
+	{
+		setChecksum(
+			blocks[i].checksum_01,
+			blocks[i].checksum_02,
+			blocks[i].pSrc,
+			blocks[i].len );
+	}
+}
+
 
 std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
 {
