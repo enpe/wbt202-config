@@ -32,6 +32,9 @@ void testGps( std::string path )
 	std::cout << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
+	if ( buffer.empty() )
+		return;
+
 	Wbt202Gps * gps = toWbt202Gps( buffer );
 
 	if ( gps )
