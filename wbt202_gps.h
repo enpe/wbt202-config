@@ -7,7 +7,7 @@
 //   significant byte first)
 // - values in these notes are given most significant byte first
 // - NOTE: the marker "<unused>" means:
-//     - these bytes are not represented by any option in the WBT_Tool.exe
+//     - these bytes are not represented by any option in the WBT_Tool
 //     - these bytes are not modified (only exception is overwrite by hard-coded
 //       default, see below)
 //     - these bytes, unless mentioned otherwise, can have arbitrary values as
@@ -145,6 +145,7 @@
 //     - the WBT manual says they are activated by default because they are
 //       basic requirements for GPS operation
 
+#include <wbt202_gps_details.h>
 #include <stdint.h>
 
 static const int BYTE_COUNT_GPS = 206;

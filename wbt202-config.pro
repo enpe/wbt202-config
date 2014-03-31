@@ -15,6 +15,7 @@ SOURCES += \
 HEADERS += \
     wbt202.h \
     wbt202_gps.h \
+    wbt202_gps_details.h \
     wbt202_log.h \
     wbt202_sys.h \
     wbt202_utils.h
