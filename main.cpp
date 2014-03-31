@@ -18,7 +18,7 @@ std::vector<char> readFile( const char * filename )
 	if ( ! file.is_open() )
 	{
 		std::cerr << "Cannot open " << filename << std::endl;
-		std::vector<char>();
+		return std::vector<char>();
 	}
 
 	return std::vector<char>(
