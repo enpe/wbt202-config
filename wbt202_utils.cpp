@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -367,6 +368,20 @@ void setChecksum( Wbt202Gps & gps )
 	}
 }
 
+std::vector<char> readFile( const char * filename )
+{
+	std::ifstream file( filename, std::ios::binary );
+
+	if ( ! file.is_open() )
+	{
+		std::cerr << "Cannot open " << filename << std::endl;
+		return std::vector<char>();
+	}
+
+	return std::vector<char>(
+		std::istreambuf_iterator<char>( file ),
+		std::istreambuf_iterator<char>() );
+}
 
 std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
 {

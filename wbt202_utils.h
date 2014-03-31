@@ -69,6 +69,8 @@ Wbt202Sys* toWbt202Sys( const std::vector<char> & data );
  */
 void setChecksum( Wbt202Gps & gps );
 
+std::vector<char> readFile( const char * filename );
+
 /** @name Overloaded operators for console output.
  * @{
  */

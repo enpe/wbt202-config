@@ -3,28 +3,12 @@
 
 #include <cassert>
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 
 std::string dataPath = "./WBT202/SYS/";
 
 namespace {
-
-std::vector<char> readFile( const char * filename )
-{
-	std::ifstream file( filename, std::ios::binary );
-
-	if ( ! file.is_open() )
-	{
-		std::cerr << "Cannot open " << filename << std::endl;
-		return std::vector<char>();
-	}
-
-	return std::vector<char>(
-		std::istreambuf_iterator<char>( file ),
-		std::istreambuf_iterator<char>() );
-}
 
 void testGps( std::string path )
 {
