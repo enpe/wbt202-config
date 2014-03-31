@@ -23,8 +23,8 @@
 #define IS_BIG_ENDIAN 0
 #endif // IS_BIG_ENDIAN
 
-#include <wbt202_gps.h>
-#include <wbt202_log.h>
-#include <wbt202_sys.h>
+#include <wbt202/wbt202_gps.h>
+#include <wbt202/wbt202_log.h>
+#include <wbt202/wbt202_sys.h>
 
 #endif // WBT202_H

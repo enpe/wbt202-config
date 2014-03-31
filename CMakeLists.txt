@@ -20,17 +20,19 @@ ADD_DEFINITIONS( -DIS_BIG_ENDIAN=${IS_BIG_ENDIAN} )
 
 # Include directories and sources.
 SET( PROJECT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${PROJECT_INCLUDE_DIRS} )
+INCLUDE_DIRECTORIES( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/wbt202 )
+INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/src )
 
 # Build targets
-FILE( GLOB WBT202_SRC_LIST "wbt202*.h" "wbt202*.cpp" )
-ADD_EXECUTABLE( ${PROJECT_NAME} ${WBT202_SRC_LIST} main.cpp )
-
-ADD_EXECUTABLE( test_gps_checksums tests/test_gps_checksums.cpp ${WBT202_SRC_LIST} )
+FILE( GLOB WBT202_SRC_LIST "src/wbt202/*.h" "src/wbt202/*.cpp" )
+ADD_EXECUTABLE( ${PROJECT_NAME} ${WBT202_SRC_LIST} src/main.cpp )
 
 # Tests
-ENABLE_TESTING()
+ADD_EXECUTABLE( test_endianness src/tests/test_endianness.cpp ${WBT202_SRC_LIST} )
+ADD_EXECUTABLE( test_gps_checksums src/tests/test_gps_checksums.cpp ${WBT202_SRC_LIST} )
 
+ENABLE_TESTING()
+ADD_TEST( NAME ENDIANNESS COMMAND test_endianness )
 ADD_TEST( NAME GPS_CHECKSUMS COMMAND test_gps_checksums "${CMAKE_SOURCE_DIR}/data/WBT202/SYS/" )
 
 

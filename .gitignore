@@ -1,6 +1,6 @@
-WBT202/*
 *.pro.user
 data/*
+!data/WBT202/
 doc/*
 CMakeLists.txt.user
 build/*

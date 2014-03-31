@@ -147,7 +147,7 @@
 //     - the WBT manual says they are activated by default because they are
 //       basic requirements for GPS operation
 
-#include <wbt202_gps_blocks.h>
+#include <wbt202/wbt202_gps_blocks.h>
 
 #include <cstdlib>
 #include <stdint.h>
