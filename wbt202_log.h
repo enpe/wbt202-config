@@ -1,3 +1,5 @@
+/** @file wbt202_log.h */
+
 #ifndef WBT202_LOG_H
 #define WBT202_LOG_H
 

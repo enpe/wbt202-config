@@ -1,4 +1,3 @@
-/** @file wbt202_utils.cpp */
 
 #include "wbt202_utils.h"
 
@@ -51,24 +50,36 @@ void convertByteOrder( uint32_t & n )
  * @{
  */
 
-/** @brief Encode a password. */
+/**
+ * @brief Encode a password.
+ */
 uint32_t encodePassword( uint32_t p )
 {
 	return 152 * ( p + 11977 );
 }
 
-/** @brief Decode a password */
+/**
+ * @brief Decode a password
+ */
 uint32_t decodePassword( uint32_t p )
 {
 	return ( p / 152 ) - 11977;
 }
 
-/** @brief Check if a password has been set. */
+/**
+ * @brief Check if a password has been set.
+ */
 bool enabledPassword( uint32_t p )
 {
 	return p != DEFAULT_PASSWORD;
 }
 /** @} */
+
+/**
+ * @name Validity checks for the configuration data of the WBT202.
+ *
+ * @{
+ */
 
 bool isValid( const Wbt202Gps * gps )
 {
@@ -105,8 +116,9 @@ bool isValid( const Wbt202Sys * sys )
 
 	return valid;
 }
+/** @} */
 
-/** @brief Serialize the device settings.
+/** @brief Helper function to serialize the device settings.
  *
  * @note Only use with @c Wbt202Gps, @c Wbt202Log, and @c Wbt202Sys.
  */
@@ -127,20 +139,6 @@ unsigned char* toBinary( const T * t )
 	}
 
 	return data;
-}
-
-unsigned char* toBinary( const Wbt202Gps * gps )
-{
-	return toBinary< Wbt202Gps >( gps );
-}
-
-unsigned char* toBinary( const Wbt202Log * log )
-{
-	return toBinary< Wbt202Log >( log );}
-
-unsigned char* toBinary( const Wbt202Sys * sys )
-{
-	return toBinary< Wbt202Sys >( sys );
 }
 
 template <typename T>
@@ -206,6 +204,20 @@ void setChecksum(
 }
 
 } // unnamed namespace
+
+unsigned char* toBinary( const Wbt202Gps * gps )
+{
+	return toBinary< Wbt202Gps >( gps );
+}
+
+unsigned char* toBinary( const Wbt202Log * log )
+{
+	return toBinary< Wbt202Log >( log );}
+
+unsigned char* toBinary( const Wbt202Sys * sys )
+{
+	return toBinary< Wbt202Sys >( sys );
+}
 
 Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
 {

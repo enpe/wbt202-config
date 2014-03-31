@@ -1,3 +1,5 @@
+/** @file wbt202_gps_blocks.h */
+
 #ifndef WBT202_GPS_BLOCKS_H
 #define WBT202_GPS_BLOCKS_H
 
@@ -13,6 +15,7 @@ struct BlockHeader
 	uint16_t   length;      ///< 0x04    uint16    N: payload length in bytes
 };
 
+/** @brief Contains variables that appear in all blocks after their payload. */
 struct BlockFooter
 {
 	uint8_t    checksum_01; ///< 0x06+N  uint8     checksum byte 1

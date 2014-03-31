@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-/** @name Serialize the structs.
+/** @name Serialize the configuration data.
  * @{
  */
 
@@ -32,7 +32,7 @@ unsigned char* toBinary( const Wbt202Sys * sys );
 
 /** @} */
 
-/** @name Deserialize the binary data.
+/** @name Deserialize the binary configuration data.
  * @{
  */
 

@@ -36,6 +36,7 @@ void testGps( std::string path )
 		return;
 
 	Wbt202Gps * gps = toWbt202Gps( buffer );
+	assert( gps );
 
 	if ( gps )
 		std::cout << *gps << std::endl;
