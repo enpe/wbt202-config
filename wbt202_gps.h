@@ -146,9 +146,11 @@
 //       basic requirements for GPS operation
 
 #include <wbt202_gps_details.h>
+
+#include <cstdlib>
 #include <stdint.h>
 
-static const int BYTE_COUNT_GPS = 206;
+static const size_t BYTE_COUNT_GPS = 206;
 
 #pragma pack(push, 1)
 

@@ -39,9 +39,10 @@
 // 0x90     uint8       Reference unit [0=Metric,1=Imperial]
 // 0x91     uint32      magic number 0x22222222
 
+#include <cstdlib>
 #include <stdint.h>
 
-static const int      BYTE_COUNT_SYS   = 149;
+static const size_t   BYTE_COUNT_SYS   = 149;
 static const uint32_t DEFAULT_PASSWORD = 0xFFFFFFFF;
 
 /**

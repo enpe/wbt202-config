@@ -44,9 +44,10 @@
 //                        Maybe a dirty flag to indicate device restart?
 // 0x54     uint32      magic number 0x44444444
 
+#include <cstdlib>
 #include <stdint.h>
 
-static const int BYTE_COUNT_LOG = 88;
+static const size_t BYTE_COUNT_LOG = 88;
 
 enum LogMode
 {
