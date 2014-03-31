@@ -29,7 +29,7 @@ std::vector<char> readFile( const char * filename )
 void testGps( std::string path )
 {
 	std::string filename = path + "/GPS.BIN";
-	std::cout << "file: " << filename << std::endl;
+	std::cout << std::endl << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
 	if ( buffer.empty() )
@@ -48,7 +48,7 @@ void testGps( std::string path )
 void testLog( std::string path )
 {
 	std::string filename = path + "/LOG.BIN";
-	std::cout << "file: " << filename << std::endl;
+	std::cout << std::endl << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
 	if ( buffer.empty() )
@@ -67,7 +67,7 @@ void testLog( std::string path )
 void testSys( std::string path )
 {
 	std::string filename = path + "/SYS.BIN";
-	std::cout << "file: " << filename << std::endl;
+	std::cout << std::endl << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
 	if ( buffer.empty() )

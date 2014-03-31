@@ -3,10 +3,6 @@
 
 #include <stdint.h>
 
-// TODO What are good names for the following structs? And for this header file?
-// TODO Should the payload_0*-structs be inlined into the struct_0*-structs?
-// TODO What about macro-magic to reduce the code duplication in struct_0[0-6]?
-
 #pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 struct BlockHeader
@@ -74,7 +70,6 @@ struct Block_46
 
 	BlockFooter footer;
 };
-
 
 struct Block_76
 {
