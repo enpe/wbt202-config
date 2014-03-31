@@ -15,6 +15,12 @@ std::vector<char> readFile( const char * filename )
 {
 	std::ifstream file( filename, std::ios::binary );
 
+	if ( ! file.is_open() )
+	{
+		std::cerr << "Cannot open " << filename << std::endl;
+		std::vector<char>();
+	}
+
 	return std::vector<char>(
 		std::istreambuf_iterator<char>( file ),
 		std::istreambuf_iterator<char>() );
@@ -26,6 +32,9 @@ void testGps( std::string path )
 	std::cout << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
+	if ( buffer.empty() )
+		return;
+
 	Wbt202Log * log = toWbt202Log( buffer );
 
 	if ( log )
@@ -42,6 +51,9 @@ void testLog( std::string path )
 	std::cout << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
+	if ( buffer.empty() )
+		return;
+
 	Wbt202Log * log = toWbt202Log( buffer );
 
 	if ( log )
@@ -58,6 +70,9 @@ void testSys( std::string path )
 	std::cout << "file: " << filename << std::endl;
 
 	std::vector<char> buffer = readFile( filename.c_str() );
+	if ( buffer.empty() )
+		return;
+
 	Wbt202Sys * sys = toWbt202Sys( buffer );
 
 	if ( sys )
