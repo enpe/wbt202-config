@@ -6,6 +6,8 @@
 // TODO What are good names for the following structs? And for this header file?
 // TODO What about macro-magic to reduce the code duplication in struct_0[0-6]?
 
+#pragma pack(push, 1) // Change the memory alignment but store previous state.
+
 struct payload_00
 {
 	uint8_t   unused_00[3];  ///< 0x00 <unused>
@@ -146,5 +148,7 @@ struct struct_06
 	uint8_t    checksum_01; ///< 0x06+N  uint8     checksum byte 1
 	uint8_t    checksum_02; ///< 0x07+N  uint8     checksum byte 2
 };
+
+#pragma pack(pop) // Restore previous memory alignment settings.
 
 #endif // WBT202_GPS_DETAILS_H

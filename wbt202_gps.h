@@ -152,7 +152,7 @@
 
 static const size_t BYTE_COUNT_GPS = 206;
 
-#pragma pack(push, 1)
+#pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 /**
  * @brief The Wbt202Gps struct
@@ -169,7 +169,7 @@ struct Wbt202Gps
 	// to be continued ...
 };
 
-#pragma pack(pop)
+#pragma pack(pop) // Restore previous memory alignment settings.
 
 #ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS,

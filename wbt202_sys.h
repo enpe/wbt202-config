@@ -56,7 +56,7 @@ enum DeviceStart
 	HOT_START=3
 };
 
-#pragma pack(push,1)
+#pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 /**
  * @brief The Wbt202Sys struct
@@ -89,7 +89,7 @@ struct Wbt202Sys
 	uint32_t  magic_end;
 };
 
-#pragma pack(pop)
+#pragma pack(pop) // Restore previous memory alignment settings.
 
 #ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS,

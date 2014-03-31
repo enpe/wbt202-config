@@ -77,7 +77,7 @@ enum LogModeUserDefined
 	LOG_MODE_MIXED_DS=15
 };
 
-#pragma pack(push, 1)
+#pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 /**
  * @brief The Wbt202Log struct
@@ -106,7 +106,7 @@ struct Wbt202Log
 	uint32_t  magic_end;              //  0x54 - 0x57
 };
 
-#pragma pack(pop)
+#pragma pack(pop) // Restore previous memory alignment settings.
 
 #ifdef COMPILER_SUPPORTS_CXX11
 static_assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG,
