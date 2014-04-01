@@ -15,6 +15,8 @@
 //     - these bytes, unless mentioned otherwise, can have arbitrary values as
 //       long as the checksum is correct
 //     -> we cannot deduce these bytes' meaning from the WBT_Tool
+// - NOTE: the marker "<TMX>" means that this option is only found in
+//         Wintec's TimeMachineX but not in their WBT_Tool
 //
 // Start    Type        Name/Description
 // 0x00     uint8       always set to 1 by WBT_Tool prior to writing the file
@@ -119,10 +121,28 @@
 //     0x08 uint8[12]  <unused>
 //
 // [ struct #6 ]
+// - configures: Space Based Augmentation Systems (SBAS)
 // - offset in file: 0xBE
 // - payload:
-//     0x00 uint8      SBAS [0=OFF, 1=ON]
-//     0x01 uint8[7]   <unused>
+//     0x00 uint8      .... ...x  Enable SBAS [0=OFF, 1=ON]
+//                     .... ..x.  Allow test mode usage (Msg 0) [0=OFF, 1=ON]
+//     0x01 uint8      .... ...x  <TMX> Ranging (use SBAS for navigation) [0=OFF, 1=ON]
+//                     .... ..x.  <TMX> Apply SBAS correction data [0=OFF, 1=ON]
+//                     .... .x..  <TMX> Apply integrity information [0=OFF, 1=ON]
+//     0x02 uint8      <TMX> Number of search channels [0,1,2,3]
+//     0x03 uint8      <unused>
+//     0x04 uint32     <TMX> PRN Code
+//                     see http://www.losangeles.af.mil/library/factsheets/factsheet.asp?id=8618
+//                     accepts a comma-separated list of numbers in the GUI
+//                     the following presets exist:
+//                         0x00000000=Auto Scan
+//                         0x00004004=WAAS      ("122,134")
+//                         0x00000851=EGNOS     ("120,124,126,131")
+//                         0x00020200=MSAS      ("129,137")
+//                     NOTE: We could reverse the algorithm that translates the
+//                           list into the uint32, but I think this is not worth
+//                           the effort since it seems to be a pretty exotic
+//                           option anyway. The defaults will likely suffice.
 //
 //
 // - for a struct to pass the validity check:
