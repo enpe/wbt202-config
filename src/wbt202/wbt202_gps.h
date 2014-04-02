@@ -15,8 +15,6 @@
 //     - these bytes, unless mentioned otherwise, can have arbitrary values as
 //       long as the checksum is correct
 //     -> we cannot deduce these bytes' meaning from the WBT_Tool
-// - NOTE: the marker "<TMX>" means that this option is only found in
-//         Wintec's TimeMachineX but not in their WBT_Tool
 //
 // Start    Type        Name/Description
 // 0x00     uint8       always set to 1 by WBT_Tool prior to writing the file
@@ -33,12 +31,16 @@
 //
 //
 // - the file contains several structs of different sizes, easy to spot by
-//   looking for the magic header (see below), and they look like this:
+//   looking for the magic header (see below)
+// - these structs are 1:1 representations of UBX packets as used by the
+//   u-blox 5 chipset for communication with the WBT-202
+// - the UBX protocol is defined in [ref1, pp. 63]
 //
 //  Offset  Size      Value/Description
-//  0x00    uint16    magic header value 0x62B5
-//  0x02    uint8     <unused>, must be 0 < x < 14
-//  0x03    uint8     <unused>
+//  0x00    uint8     sync char 1, magic header value 0xB5
+//  0x01    uint8     sync char 2, magic header value 0x62
+//  0x02    uint8     message class, must be 0 < x < 14
+//  0x03    uint8     message ID
 //  0x04    uint16    N: payload length in bytes
 //  0x06    uint8[N]  payload
 //  0x06+N  uint8     checksum byte 1
@@ -50,6 +52,7 @@
 //     - NOTE: We are assuming a little-endian machine and unmodified struct
 //             data, i.e. the byte stream exactly as in the file. Keep this in
 //             mind when writing for big-endian machines!
+//     - NOTE: this is the "Fletcher-16" checksum algorithm [ref2]
 //
 //   uint8_t * pSrc = address of struct's first byte
 //   uint16_t len = value N from the table above
@@ -122,27 +125,22 @@
 //
 // [ struct #6 ]
 // - configures: Space Based Augmentation Systems (SBAS)
+// - name: CFG-SBAS [ref1, pp. 115]
 // - offset in file: 0xBE
 // - payload:
-//     0x00 uint8      .... ...x  Enable SBAS [0=OFF, 1=ON]
-//                     .... ..x.  Allow test mode usage (Msg 0) [0=OFF, 1=ON]
-//     0x01 uint8      .... ...x  <TMX> Ranging (use SBAS for navigation) [0=OFF, 1=ON]
-//                     .... ..x.  <TMX> Apply SBAS correction data [0=OFF, 1=ON]
-//                     .... .x..  <TMX> Apply integrity information [0=OFF, 1=ON]
-//     0x02 uint8      <TMX> Number of search channels [0,1,2,3]
-//     0x03 uint8      <unused>
-//     0x04 uint32     <TMX> PRN Code
-//                     see http://www.losangeles.af.mil/library/factsheets/factsheet.asp?id=8618
-//                     accepts a comma-separated list of numbers in the GUI
-//                     the following presets exist:
-//                         0x00000000=Auto Scan
-//                         0x00004004=WAAS      ("122,134")
-//                         0x00000851=EGNOS     ("120,124,126,131")
-//                         0x00020200=MSAS      ("129,137")
-//                     NOTE: We could reverse the algorithm that translates the
-//                           list into the uint32, but I think this is not worth
-//                           the effort since it seems to be a pretty exotic
-//                           option anyway. The defaults will likely suffice.
+//     0x00 uint8      SBAS mode (bitmask)
+//                         .... ...x  Enable SBAS [0=OFF, 1=ON]
+//                         .... ..x.  Allow test mode usage (Msg 0) [0=OFF, 1=ON]
+//     0x01 uint8      SBAS usage (bitmask)
+//                         .... ...x  Ranging (use SBAS for navigation) [0=OFF, 1=ON]
+//                         .... ..x.  Apply SBAS correction data [0=OFF, 1=ON]
+//                         .... .x..  Apply integrity information [0=OFF, 1=ON]
+//     0x02 uint8      Number of search channels [0,1,2,3]
+//     0x03 uint8      scanmode2 (bitmask)
+//     0x04 uint32     scanmode1 (bitmask)
+//                         - each bit represents a PRN number, for a list see [ref1, p. 116]
+//                         - see http://www.losangeles.af.mil/library/factsheets/factsheet.asp?id=8618)
+//                         - setting all bits to 0 enables "Auto Scan"
 //
 //
 // - for a struct to pass the validity check:
@@ -166,6 +164,16 @@
 //     - none of the bytes in the file seems to affect them either
 //     - the WBT manual says they are activated by default because they are
 //       basic requirements for GPS operation
+//
+//
+// References:
+//
+//   [ref1] u-blox AG: "u-blox 5 Receiver Description", document number
+//          GPS.G5-X-07036-G
+//   [ref2] Fletcher, J.: "An Arithmetic Checksum for Serial Transmissions,"
+//          IEEE Transactions on Communications , vol. 30, no. 1, pp. 247--252,
+//          January 1982
+
 
 #include <wbt202/wbt202_gps_blocks.h>
 
