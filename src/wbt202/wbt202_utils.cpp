@@ -263,12 +263,12 @@ GpsBin * toWbt202Gps( const std::vector<char> & data )
 LogBin* toWbt202Log( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
-	assert( data.size() == BYTE_COUNT_LOG );
-	assert( sizeof( LogBin ) == BYTE_COUNT_LOG );
+	assert( data.size() == SIZE_LOG_BIN );
+	assert( sizeof( LogBin ) == SIZE_LOG_BIN );
 
 	LogBin * log = NULL;
 
-	if ( data.size() == BYTE_COUNT_LOG )
+	if ( data.size() == SIZE_LOG_BIN )
 	{
 		log = new LogBin( *(
 			reinterpret_cast<const LogBin*>( data.data() ) ) );
