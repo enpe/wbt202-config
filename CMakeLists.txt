@@ -1,6 +1,8 @@
 PROJECT( wbt202-config )
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
+OPTION( DEBUG "Build with debug information" OFF )
+
 # Check support for C++11, and, if available, enable it.
 INCLUDE( CheckCXXCompilerFlag )
 CHECK_CXX_COMPILER_FLAG( "-std=c++11" COMPILER_SUPPORTS_CXX11 )
