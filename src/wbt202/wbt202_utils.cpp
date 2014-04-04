@@ -234,19 +234,14 @@ Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
 
 		if ( IS_BIG_ENDIAN )
 		{
-			convertByteOrder( gps->block_16.header.magic    );
 			convertByteOrder( gps->block_16.header.length   );
 
-			convertByteOrder( gps->block_26.header.magic    );
 			convertByteOrder( gps->block_26.header.length   );
 
-			convertByteOrder( gps->block_36.header.magic    );
 			convertByteOrder( gps->block_36.header.length   );
 
-			convertByteOrder( gps->block_46.header.magic    );
 			convertByteOrder( gps->block_46.header.length   );
 
-			convertByteOrder( gps->block_76.header.magic    );
 			convertByteOrder( gps->block_76.header.length   );
 			convertByteOrder( gps->block_76.fix_altitude_2d );
 			convertByteOrder( gps->block_76.pdop_mask       );
@@ -254,12 +249,10 @@ Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
 			convertByteOrder( gps->block_76.p_accuracy_map  );
 			convertByteOrder( gps->block_76.t_accuracy_map  );
 
-			convertByteOrder( gps->block_A2.header.magic    );
 			convertByteOrder( gps->block_A2.header.length   );
 			convertByteOrder( gps->block_A2.led_blink_cycle );
 			convertByteOrder( gps->block_A2.led_off_cycle   );
 
-			convertByteOrder( gps->block_BE.header.magic    );
 			convertByteOrder( gps->block_BE.header.length   );
 		}
 	}
@@ -403,7 +396,7 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
 		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map          ), "m"    },
 		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle         ), "µs"   },
 		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle           ), "µs"   },
-		{ "sbas",                   toString( gps.block_BE.sbas ? "on" : "off"     ), ""     }
+		{ "sbas",                   toString( gps.block_BE.sbas_mode ? "on" : "off"     ), ""     }
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );

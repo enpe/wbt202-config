@@ -70,9 +70,10 @@ static const uint8_t default_block_BE[] =
 /** @brief Contains variables that appear in all blocks before their payload. */
 struct BlockHeader
 {
-	uint16_t   magic;       ///< 0x00 magic header value 0x62B5
-	uint8_t    unused_01;   ///< 0x02 <unused>, must be 0 < x < 14
-	uint8_t    unused_02;   ///< 0x03 <unused>
+	uint8_t    sync_01;     ///< 0x00 sync char 1, magic header value 0xB5
+	uint8_t    sync_02;     ///< 0x01 sync char 2, magic header value 0x62
+	uint8_t    msg_class;   ///< 0x02 message class, must be 0 < x < 14
+	uint8_t    msg_id;      ///< 0x03 message ID
 	uint16_t   length;      ///< 0x04 N: payload length in bytes
 };
 
@@ -170,8 +171,11 @@ struct Block_BE
 	BlockHeader header;
 
 	// Payload
-	uint8_t   sbas;         ///< 0x00 SBAS [0=OFF, 1=ON]
-	uint8_t   unused_01[7]; ///< 0x01 <unused>
+	uint8_t   sbas_mode;   ///< 0x00 SBAS [0=OFF, 1=ON] (cf. notes for details)
+	uint8_t   sbas_usage;  ///< 0x01 SBAS usage (cf. notes for details)
+	uint8_t   channels;    ///< 0x02 Number of search channels [0,1,2,3]
+	uint8_t   scanmode_02; ///< 0x03 scanmode2 (bitmask) (cf. notes for details)
+	uint32_t  scanmode_01; ///< 0x03 scanmode1 (bitmask) (cf. notes for details)
 
 	BlockFooter footer;
 };
