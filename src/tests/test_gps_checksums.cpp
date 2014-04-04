@@ -49,7 +49,7 @@ bool testGpsChecksums( std::string filename )
 			{ original->block_46.footer.checksum_01, original->block_46.footer.checksum_02, test.block_46.footer.checksum_01, test.block_46.footer.checksum_02 },
 			{ original->block_76.footer.checksum_01, original->block_76.footer.checksum_02, test.block_76.footer.checksum_01, test.block_76.footer.checksum_02 },
 			{ original->block_A2.footer.checksum_01, original->block_A2.footer.checksum_02, test.block_A2.footer.checksum_01, test.block_A2.footer.checksum_02 },
-			{ original->block_BE.footer.checksum_01, original->block_BE.footer.checksum_02, test.block_BE.footer.checksum_01, test.block_BE.footer.checksum_02 },
+			{ original->cfg_sbas.footer.checksum_01, original->cfg_sbas.footer.checksum_02, test.cfg_sbas.footer.checksum_01, test.cfg_sbas.footer.checksum_02 },
 		};
 
 		int count = 0;

@@ -253,7 +253,7 @@ GpsBin * toWbt202Gps( const std::vector<char> & data )
 			convertByteOrder( gps->block_A2.led_blink_cycle );
 			convertByteOrder( gps->block_A2.led_off_cycle   );
 
-			convertByteOrder( gps->block_BE.header.length   );
+			convertByteOrder( gps->cfg_sbas.header.length   );
 		}
 	}
 
@@ -347,7 +347,7 @@ void setChecksum( GpsBin & gps )
 		{ gps.block_46.footer.checksum_01, gps.block_46.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_46 ), gps.block_46.header.length },
 		{ gps.block_76.footer.checksum_01, gps.block_76.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_76 ), gps.block_76.header.length },
 		{ gps.block_A2.footer.checksum_01, gps.block_A2.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_A2 ), gps.block_A2.header.length },
-		{ gps.block_BE.footer.checksum_01, gps.block_BE.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.block_BE ), gps.block_BE.header.length }
+		{ gps.cfg_sbas.footer.checksum_01, gps.cfg_sbas.footer.checksum_02, reinterpret_cast< const uint8_t* >( &gps.cfg_sbas ), gps.cfg_sbas.header.length }
 	};
 	int count = sizeof( blocks ) / sizeof( Block );
 
@@ -396,7 +396,7 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map          ), "m"    },
 		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle         ), "µs"   },
 		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle           ), "µs"   },
-		{ "sbas",                   toString( gps.block_BE.sbas_mode ? "on" : "off"     ), ""     }
+		{ "sbas",                   toString( gps.cfg_sbas.sbas_mode ? "on" : "off"     ), ""     }
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );

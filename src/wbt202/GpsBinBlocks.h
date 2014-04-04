@@ -108,7 +108,7 @@ struct Block_A2
 	BlockFooter footer;
 };
 
-struct Block_BE
+struct Cfg_SBAS
 {
 	BlockHeader header;
 
@@ -131,7 +131,7 @@ bool check( Block_36 & block );
 bool check( Block_46 & block );
 bool check( Block_76 & block );
 bool check( Block_A2 & block );
-bool check( Block_BE & block );
+bool check( Cfg_SBAS & block );
 /** @} */
 #pragma pack(pop)
 

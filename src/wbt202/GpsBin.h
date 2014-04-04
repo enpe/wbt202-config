@@ -217,7 +217,7 @@ struct GpsBin
 	Block_46  block_46;       ///< 0x46 struct #3
 	Block_76  block_76;       ///< 0x76 struct #4
 	Block_A2  block_A2;       ///< 0xA2 struct #5
-	Block_BE  block_BE;       ///< 0xBE struct #6
+	Cfg_SBAS  cfg_sbas;       ///< 0xBE struct #6
 };
 
 #pragma pack(pop) // Restore previous memory alignment settings.

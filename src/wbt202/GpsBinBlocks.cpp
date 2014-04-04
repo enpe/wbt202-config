@@ -37,7 +37,7 @@ bool check( Block_A2 & block )
 	return false;
 }
 
-bool check( Block_BE & block )
+bool check( Cfg_SBAS & block )
 {
 	// TODO Missing implementation.
 	return false;
