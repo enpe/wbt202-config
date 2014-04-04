@@ -1,7 +1,7 @@
 *.pro.user
 data/*
 !data/WBT202/
-doc/*
+doc/html/*
 CMakeLists.txt.user
 build/*
 .DS_Store
