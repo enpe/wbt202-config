@@ -15,7 +15,7 @@ int main( int, char** )
 
 	passed &= ( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS );
 	passed &= ( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
-	passed &= ( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS );
+	passed &= ( sizeof( SysBin ) == SIZE_SYS_BIN );
 
 	return ( passed ? 0 : 1 );
 }

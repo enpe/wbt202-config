@@ -58,7 +58,7 @@ void testSys( std::string path )
 	if ( buffer.empty() )
 		return;
 
-	Wbt202Sys * sys = toWbt202Sys( buffer );
+	SysBin * sys = toSysBin( buffer );
 
 	if ( sys )
 		std::cout << *sys << std::endl;

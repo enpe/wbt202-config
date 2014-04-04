@@ -28,7 +28,7 @@ unsigned char* toBinary( const Wbt202Log * log );
  *
  * Returns a NULL pointer if settings fail the internal sanity check.
  */
-unsigned char* toBinary( const Wbt202Sys * sys );
+unsigned char* toBinary( const SysBin * sys );
 
 /** @} */
 
@@ -55,7 +55,7 @@ Wbt202Log* toWbt202Log( const std::vector<char> & data );
  * The array must be @c BYTE_COUNT_SYS bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-Wbt202Sys* toWbt202Sys( const std::vector<char> & data );
+SysBin* toSysBin( const std::vector<char> & data );
 
 /** @} */
 
@@ -76,7 +76,7 @@ std::vector<char> readFile( const char * filename );
  */
 std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps );
 std::ostream& operator<<( std::ostream & os, const Wbt202Log & log );
-std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys );
+std::ostream& operator<<( std::ostream & os, const SysBin & sys );
 /** @} */
 
 #endif // WBT202_UTILS_H

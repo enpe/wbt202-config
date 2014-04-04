@@ -10,6 +10,6 @@
 
 #include <wbt202/wbt202_gps.h>
 #include <wbt202/wbt202_log.h>
-#include <wbt202/wbt202_sys.h>
+#include <wbt202/SysBin.h>
 
 #endif // WBT202_H

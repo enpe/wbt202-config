@@ -72,7 +72,7 @@ uint32_t decodePassword( uint32_t p )
  */
 bool enabledPassword( uint32_t p )
 {
-	return p != DEFAULT_PASSWORD;
+	return p != NO_PASSWORD_SET;
 }
 /** @} */
 
@@ -106,7 +106,7 @@ bool isValid( const Wbt202Log * log )
 	return valid;
 }
 
-bool isValid( const Wbt202Sys * sys )
+bool isValid( const SysBin * sys )
 {
 	bool valid = false;
 
@@ -121,7 +121,7 @@ bool isValid( const Wbt202Sys * sys )
 
 /** @brief Helper function to serialize the device settings.
  *
- * @note Only use with @c Wbt202Gps, @c Wbt202Log, and @c Wbt202Sys.
+ * @note Only use with @c Wbt202Gps, @c Wbt202Log, and @c SysBin.
  */
 template <typename T>
 unsigned char* toBinary( const T * t )
@@ -215,9 +215,9 @@ unsigned char* toBinary( const Wbt202Log * log )
 {
 	return toBinary< Wbt202Log >( log );}
 
-unsigned char* toBinary( const Wbt202Sys * sys )
+unsigned char* toBinary( const SysBin * sys )
 {
-	return toBinary< Wbt202Sys >( sys );
+	return toBinary< SysBin >( sys );
 }
 
 Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
@@ -295,18 +295,18 @@ Wbt202Log* toWbt202Log( const std::vector<char> & data )
 	return log;
 }
 
-Wbt202Sys* toWbt202Sys( const std::vector<char> & data )
+SysBin* toSysBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
-	assert( data.size() == BYTE_COUNT_SYS );
-	assert( sizeof( Wbt202Sys ) == BYTE_COUNT_SYS );
+	assert( data.size() == SIZE_SYS_BIN );
+	assert( sizeof( SysBin ) == SIZE_SYS_BIN );
 
-	Wbt202Sys * sys = NULL;
+	SysBin * sys = NULL;
 
-	if ( data.size() == BYTE_COUNT_SYS )
+	if ( data.size() == SIZE_SYS_BIN )
 	{
-		sys = new Wbt202Sys( *(
-			reinterpret_cast<const Wbt202Sys*>( data.data() ) ) );
+		sys = new SysBin( *(
+			reinterpret_cast<const SysBin*>( data.data() ) ) );
 
 		// If we are not running on a little-endian machine, we must explicitly
 		// convert the data to big-endian byte order.
@@ -432,7 +432,7 @@ std::ostream & operator<<( std::ostream & os, const Wbt202Log & log )
 	return os;
 }
 
-std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
+std::ostream& operator<<( std::ostream & os, const SysBin & sys )
 {
 
 	std::string device_name = "<not set>";
@@ -463,7 +463,7 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Sys & sys )
 		{ "magic_begin",        toString( sys.magic_begin        ), "", },
 		{ "device_name",        device_name,                        "", },
 		{ "device_info",        device_info,                        "", },
-		{ "start_mode",         toString( sys.start_mode         ), "", },
+		{ "start_mode",         toString( sys.restart_mode       ), "", },
 		{ "cid",                toString( sys.cid                ), "", },
 		{ "pid",                toString( sys.pid                ), "", },
 		{ "shake_mode",         toString( sys.shake_mode         ), "", },
