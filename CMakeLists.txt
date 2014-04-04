@@ -6,14 +6,17 @@ INCLUDE( CheckCXXCompilerFlag )
 CHECK_CXX_COMPILER_FLAG( "-std=c++11" COMPILER_SUPPORTS_CXX11 )
 CHECK_CXX_COMPILER_FLAG( "-std=c++0x" COMPILER_SUPPORTS_CXX0X )
 
+SET( INFO_SUPPORTS_CXX11 "No" )
 IF ( ${COMPILER_SUPPORTS_CXX11} )
 	ADD_DEFINITIONS( -DCOMPILER_SUPPORTS_CXX11 )
 	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+	SET( INFO_IS_CXX11_SUPPORT "Yes" )
 ELSEIF ( ${COMPILER_SUPPORTS_CXX0X} )
 	# Treat support of C++0x as C++11 support because that also suffices for
 	# what we are currently using.
 	ADD_DEFINITIONS( -DCOMPILER_SUPPORTS_CXX11 )
 	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" )
+	SET( INFO_IS_CXX11_SUPPORT "Yes (C++0x only)" )
 ENDIF( ${COMPILER_SUPPORTS_CXX11} )
 
 # Check the endianness of the system and set define accordingly.
@@ -23,11 +26,19 @@ INCLUDE( TestBigEndian )
 TEST_BIG_ENDIAN( IS_BIG_ENDIAN )
 
 ADD_DEFINITIONS( -DIS_BIG_ENDIAN=${IS_BIG_ENDIAN} )
+IF ( IS_BIG_ENDIAN )
+	SET( INFO_ENDIANNESS "big-endian" )
+ELSE ()
+	SET( INFO_ENDIANNESS "little-endian" )
+ENDIF ()
 
 # Debug build
 IF ( DEBUG )
 	ADD_DEFINITIONS( -DDEBUG )
 	ADD_DEFINITIONS( -g -O0 -Wall )
+	SET( INFO_IS_DEBUG "Yes" )
+ELSE ()
+	SET( INFO_IS_DEBUG "No" )
 ENDIF ()
 
 # Include directories and sources.
@@ -49,4 +60,13 @@ ADD_TEST( NAME MEMORY_ALIGNMENT COMMAND test_memory_alignment                   
 ADD_TEST( NAME ENDIANNESS       COMMAND test_endianness                                                  )
 ADD_TEST( NAME GPS_CHECKSUMS    COMMAND test_gps_checksums "${CMAKE_SOURCE_DIR}/data/WBT202/SYS/GPS.BIN" )
 
+# Print build configuration and info
+MESSAGE( "" )
+MESSAGE( "  Build configuration" )
+MESSAGE( "    Debug build:      " ${INFO_IS_DEBUG} )
+MESSAGE( "    C++11 support:    " ${INFO_IS_CXX11_SUPPORT} )
+MESSAGE( "" )
+MESSAGE( "  Platform information" )
+MESSAGE( "    Endianness:       " ${INFO_ENDIANNESS} )
+MESSAGE( "" )
 
