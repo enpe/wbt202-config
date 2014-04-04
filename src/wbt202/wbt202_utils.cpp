@@ -227,7 +227,7 @@ GpsBin * toWbt202Gps( const std::vector<char> & data )
 	// TODO Missing implementation.
 	GpsBin * gps = NULL;
 
-	if ( data.size() == BYTE_COUNT_GPS )
+	if ( data.size() == SIZE_GPS_BIN )
 	{
 		gps = new GpsBin( *(
 			reinterpret_cast<const GpsBin*>( data.data() ) ) );
