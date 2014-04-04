@@ -3,7 +3,8 @@
   *
   * @brief Checks the size of the configuration structs.
   *
-  * @note C++11-based builds use @c static_assert and do not require this test.
+  * @note Builds based on C++0x and C++11 use @c static_assert and do not
+  *       require this test.
   */
 
 #include <wbt202/wbt202.h>
