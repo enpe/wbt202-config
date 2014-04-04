@@ -24,12 +24,12 @@ bool testGpsChecksums( std::string filename )
 		return false;
 
 	bool passed = false;
-	Wbt202Gps * original = toWbt202Gps( buffer );
+	GpsBin * original = toWbt202Gps( buffer );
 
 	if ( original )
 	{
 		// Re-compute the checksums and compare them to the original.
-		Wbt202Gps test = *original;
+		GpsBin test = *original;
 		setChecksum( test );
 
 		struct Field

@@ -1,7 +1,7 @@
-/** @file wbt202_gps.h */
+/** @file */
 
-#ifndef WBT202_GPS_H
-#define WBT202_GPS_H
+#ifndef GPSBIN_H
+#define GPSBIN_H
 
 // Notes on GPS.BIN
 //
@@ -184,12 +184,7 @@ static const size_t BYTE_COUNT_GPS = 206;
 
 #pragma pack(push, 1) // Change the memory alignment but store previous state.
 
-/**
- * @brief The Wbt202Gps struct
- *
- * // TODO Move the notes from above to here (in Doxygen-format).
- */
-struct Wbt202Gps
+struct GpsBin
 {
 	uint8_t   dirty;          ///< 0x00 dirty flag
 	uint8_t   gps_mode;       ///< 0x01 GPS mode
@@ -206,8 +201,8 @@ struct Wbt202Gps
 #pragma pack(pop) // Restore previous memory alignment settings.
 
 #ifdef COMPILER_SUPPORTS_CXX11
-static_assert( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS,
+static_assert( sizeof( GpsBin ) == BYTE_COUNT_GPS,
 	"Size of GPS struct does not match the required byte count." );
 #endif // COMPILER_SUPPORTS_CXX11
 
-#endif // WBT202_GPS_H
+#endif // GPSBIN_H

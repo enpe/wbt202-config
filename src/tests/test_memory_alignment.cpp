@@ -13,8 +13,8 @@ int main( int, char** )
 {
 	bool passed = true;
 
-	passed &= ( sizeof( Wbt202Gps ) == BYTE_COUNT_GPS );
-	passed &= ( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
+	passed &= ( sizeof( GpsBin ) == BYTE_COUNT_GPS );
+	passed &= ( sizeof( LogBin ) == BYTE_COUNT_LOG );
 	passed &= ( sizeof( SysBin ) == SIZE_SYS_BIN );
 
 	return ( passed ? 0 : 1 );

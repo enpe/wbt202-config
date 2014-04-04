@@ -1,7 +1,7 @@
-/** @file wbt202_log.h */
+/** @file */
 
-#ifndef WBT202_LOG_H
-#define WBT202_LOG_H
+#ifndef LOGBIN_H
+#define LOGBIN_H
 
 // Notes on LOG.BIN
 //
@@ -81,12 +81,7 @@ enum LogModeUserDefined
 
 #pragma pack(push, 1) // Change the memory alignment but store previous state.
 
-/**
- * @brief The Wbt202Log struct
- *
- * // TODO Move the notes from above to here (in Doxygen-format).
- */
-struct Wbt202Log
+struct LogBin
 {
 	uint32_t  magic_begin;            //  0x00 - 0x03
 	uint8_t   log_mode;               //  0x04 - 0x04
@@ -111,8 +106,8 @@ struct Wbt202Log
 #pragma pack(pop) // Restore previous memory alignment settings.
 
 #ifdef COMPILER_SUPPORTS_CXX11
-static_assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG,
+static_assert( sizeof( LogBin ) == BYTE_COUNT_LOG,
     "Size of LOG struct does not match the required byte count." );
 #endif // COMPILER_SUPPORTS_CXX11
 
-#endif //  WBT202_LOG_H
+#endif //  LOGBIN_H

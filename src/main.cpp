@@ -19,7 +19,7 @@ void testGps( std::string path )
 	if ( buffer.empty() )
 		return;
 
-	Wbt202Gps * gps = toWbt202Gps( buffer );
+	GpsBin * gps = toWbt202Gps( buffer );
 	assert( gps );
 
 	if ( gps )
@@ -39,7 +39,7 @@ void testLog( std::string path )
 	if ( buffer.empty() )
 		return;
 
-	Wbt202Log * log = toWbt202Log( buffer );
+	LogBin * log = toWbt202Log( buffer );
 
 	if ( log )
 		std::cout << *log << std::endl;

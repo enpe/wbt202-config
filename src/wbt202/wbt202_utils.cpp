@@ -82,7 +82,7 @@ bool enabledPassword( uint32_t p )
  * @{
  */
 
-bool isValid( const Wbt202Gps * gps )
+bool isValid( const GpsBin * gps )
 {
 	bool valid = false;
 
@@ -94,7 +94,7 @@ bool isValid( const Wbt202Gps * gps )
 	return valid;
 }
 
-bool isValid( const Wbt202Log * log )
+bool isValid( const LogBin * log )
 {
 	bool valid = false;
 
@@ -206,31 +206,31 @@ void setChecksum(
 
 } // unnamed namespace
 
-unsigned char* toBinary( const Wbt202Gps * gps )
+unsigned char* toBinary( const GpsBin * gps )
 {
-	return toBinary< Wbt202Gps >( gps );
+	return toBinary< GpsBin >( gps );
 }
 
-unsigned char* toBinary( const Wbt202Log * log )
+unsigned char* toBinary( const LogBin * log )
 {
-	return toBinary< Wbt202Log >( log );}
+	return toBinary< LogBin >( log );}
 
 unsigned char* toBinary( const SysBin * sys )
 {
 	return toBinary< SysBin >( sys );
 }
 
-Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
+GpsBin * toWbt202Gps( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 
 	// TODO Missing implementation.
-	Wbt202Gps * gps = NULL;
+	GpsBin * gps = NULL;
 
 	if ( data.size() == BYTE_COUNT_GPS )
 	{
-		gps = new Wbt202Gps( *(
-			reinterpret_cast<const Wbt202Gps*>( data.data() ) ) );
+		gps = new GpsBin( *(
+			reinterpret_cast<const GpsBin*>( data.data() ) ) );
 
 		if ( IS_BIG_ENDIAN )
 		{
@@ -260,18 +260,18 @@ Wbt202Gps * toWbt202Gps( const std::vector<char> & data )
 	return gps;
 }
 
-Wbt202Log* toWbt202Log( const std::vector<char> & data )
+LogBin* toWbt202Log( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 	assert( data.size() == BYTE_COUNT_LOG );
-	assert( sizeof( Wbt202Log ) == BYTE_COUNT_LOG );
+	assert( sizeof( LogBin ) == BYTE_COUNT_LOG );
 
-	Wbt202Log * log = NULL;
+	LogBin * log = NULL;
 
 	if ( data.size() == BYTE_COUNT_LOG )
 	{
-		log = new Wbt202Log( *(
-			reinterpret_cast<const Wbt202Log*>( data.data() ) ) );
+		log = new LogBin( *(
+			reinterpret_cast<const LogBin*>( data.data() ) ) );
 
 		// If we are not running on a little-endian machine, we must explicitely
 		// convert the data to big-endian byte order.
@@ -328,7 +328,7 @@ SysBin* toSysBin( const std::vector<char> & data )
 	return sys;
 }
 
-void setChecksum( Wbt202Gps & gps )
+void setChecksum( GpsBin & gps )
 {
 	struct Block
 	{
@@ -376,7 +376,7 @@ std::vector<char> readFile( const char * filename )
 		std::istreambuf_iterator<char>() );
 }
 
-std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
+std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 {
 	Field fields[] =
 	{
@@ -405,7 +405,7 @@ std::ostream& operator<<( std::ostream & os, const Wbt202Gps & gps )
 	return os;
 }
 
-std::ostream & operator<<( std::ostream & os, const Wbt202Log & log )
+std::ostream & operator<<( std::ostream & os, const LogBin & log )
 {
 	Field fields[] = {
 		{ "magic_begin",           toString( log.magic_begin           ), "", },
