@@ -130,11 +130,38 @@
  *
  * [ struct #5 ]
  * -------------
+ * - configures: Time Pulse [ref1, pp. 9]
  * - offset in file: 0xA2
+ * - name: CFG-TP [ref1, p. 107]
  * - payload:
- *     0x00 uint32     LED Blink cycle [2;10000 ms] (stored as µs)
- *     0x04 uint32     LED Off cycle [1;9999 ms] (stored as µs)
- *     0x08 uint8[12]  <unused>
+ *     0x00 uint32     Pulse period (µs)
+ *     0x04 uint32     Pulse length (µs)
+ *     0x08 int8       Pulse mode [-1=Falling edge, 0=Disabled, 1=Rising edge]
+ *     0x09 uint8      Time source [0=UTC time, 1=GPS time, 2=Local time]
+ *     0x0A uint8      Sync mode
+ *                         0=Time pulse always synchronized and only available if time is valid
+ *                         1=Time pulse allowed to be asynchronized and available even when time is not valid
+ *     0x0B uint8      <reserved> (set to zero)
+ *     0x0C int16      Cable delay (ns)
+ *     0x0E int16      RF group delay (ns), does not seem to be editable
+ *     0x10 int32      User delay (ns)
+ * - notes:
+ *     - The u-blox GPS chip inside the WBT-202 seems to feature a dedicated
+ *       timepulse pin (see http://electronics.stackexchange.com/questions/30750
+ *       for why that can be a useful thing to have).
+ *     - This config section allows us to change the timepulse setting, i.e. set
+ *       the pulse interval, the pulse mode etc.
+ *     - In the WBT-202, the timepulse pin is probably only used for making the
+ *       GPS LED blink (I have not checked) -- whatever the need for a
+ *       configurable LED blink cycle may be.
+ *
+ *          ├───┤ Pulse length
+ *          ┌───┐              ┌───┐
+ *       ───┘   └──────────────┘   └────────
+ *          ├── Pulse period ──┤
+ * 
+ *     - The timepulse pin going high turns the LED off, i.e. "Pulse mode" set
+ *       to "Rising edge" -> "Pulse length" is the time that the LED is off
  *
  * [ struct #6 ]
  * -------------
