@@ -31,7 +31,7 @@
  * | 0x42   | uint32    | Password, stored as 152 * ( P + 11977 ) or as 0xFFFFFFFF if left empty
  * | 0x46   | uchar[30] | UNKNOWN, absolute path to some .TES track file
  * | 0x64   | uchar[40] | UNKNOWN
- * | 0x8c   | uint8     | Always set to 1 by WBT_Tool prior to writing the SYS.BIN file (Maybe a dirty flag to indicate device restart?)
+ * | 0x8c   | uint8     | Dirty flag, always set to 1 by WBT_Tool prior to writing the file, and set to 0 by the WBT device upon entering CDC mode (its usual operation mode for logging)
  * | 0x8d   | int16     | Reference time zone, 100 * ( difference in hours ): e.g. -150 = -1.5h
  * | 0x8f   | uint8     | Language selected in WBT_Tool (0=English, 1=Traditional Chinese, 2=Simplified Chinese, 3=German, 4=Japanese)
  * | 0x90   | uint8     | Reference unit (0=Metric,1=Imperial)

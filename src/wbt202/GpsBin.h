@@ -21,7 +21,7 @@
  *
  * | Start  | Type      | Name/Description
  * |--------|-----------|-------------------------------------------------------
- * | 0x00   | uint8     | Always set to 1 by WBT_Tool prior to writing the file. Maybe a dirty flag to indicate device restart?
+ * | 0x00   | uint8     | Dirty flag, always set to 1 by WBT_Tool prior to writing the file, and set to 0 by the WBT device upon entering CDC mode (its usual operation mode for logging)
  * | 0x01   | uint8     | GPS Mode (see table below).
  * | 0x02   | uint8[]   | UNKNOWN, not used by WBT_Tool 4.6
  * | 0x16   | ...       | see detailed description of structs below

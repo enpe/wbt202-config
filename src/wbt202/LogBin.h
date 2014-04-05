@@ -30,7 +30,7 @@
  * | 0x18   | uint16    | seconds/point (By Time Interval, max=65535)
  * | 0x1a   | uint16    | meters/point (By Distance Interval, max=5000)
  * | 0x1c   | uint8[55] | UNKNOWN
- * | 0x53   | uint8     | Always set to 1 by WBT_Tool prior to writing the file. Maybe a dirty flag to indicate device restart?
+ * | 0x53   | uint8     | Dirty flag, always set to 1 by WBT_Tool prior to writing the file, and set to 0 by the WBT device upon entering CDC mode (its usual operation mode for logging)
  * | 0x54   | uint32    | magic number 0x44444444
  *
  * Possible values of the at offset 0x05 (User Define LOG Mode):
