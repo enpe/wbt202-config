@@ -17,7 +17,7 @@
  * | 0x00   | uint32    | magic number 0x11111111
  * | 0x04   | uchar[]   | Device name (max. 19 bytes + terminating NULL byte)
  * | 0x18   | uchar[]   | Device info (max. 19 bytes + terminating NULL byte)
- * | 0x2c   | uint8     | GPS Re-Start (1=Cold Start, 2=Warm Start, 3=Hot Start) (bug in WBT_Tool 4.7 will always set this to 2)
+ * | 0x2c   | uint8     | GPS Re-Start (1=Cold Start, 2=Warm Start, 3=Hot Start) (bug in WBT_Tool 4.7 will always set "Hot Start" to 2)
  * | 0x2d   | uint16    | CID
  * | 0x2f   | uint16    | PID (must be 0xB202)
  * | 0x31   | uint32    | UNKNOWN, seems to be used only in export to TimeMachineX's TK2 format
