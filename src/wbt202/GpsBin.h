@@ -114,19 +114,41 @@
  *
  * [ struct #4 ]
  * -------------
+ * - configures: Navigation Engine [ref1, pp. 25]
  * - offset in file: 0x76
+ * - name: CFG-NAV5 [ref1, pp. 122]
  * - payload:
- *     0x00 uint8[3]   <unused>
- *     0x03 uint8      Fix Mode [1=2D Only, 2=3D Only, 3=Auto 2D/3D]
- *     0x04 uint32     2D Fix Altitude (stored as mm) [0;18000 (m)]
- *     0x08 uint8[6]   <unused>
- *     0x0E uint16     PDOP Mask, [0;1000] (stored as 10 times the GUI value
- *                     (gets rid of comma))
- *     0x10 uint16     TDOP Mask, [0;1000] (stored as 10 times the GUI value
- *                     (gets rid of comma))
- *     0x12 uint16     P Accuracy Map [0;65535 (m)]
- *     0x14 uint16     T Accuracy Map [0;65535 (m)]
- *     0x16 uint8[14]  <unused>
+ *     0x00 uint16    Settings selector (bitmask)
+ *                        .... .... .... ...x  Apply dynamic model settings
+ *                        .... .... .... ..x.  Apply minimum elevation settings
+ *                        .... .... .... .x..  Apply fix mode settings
+ *                        .... .... .... x...  Apply DR limit settings
+ *                        .... .... ...x ....  Apply position mask settings
+ *                        .... .... ..x. ....  Apply time mask settings
+ *                        .... .... .x.. ....  Apply static hold settings
+ *     0x02 uint8     Dynamic platform model
+ *                        0=Portable
+ *                        2=Stationary
+ *                        3=Pedestrian
+ *                        4=Automotive
+ *                        5=Sea
+ *                        6=Airborne with <1g Acceleration
+ *                        7=Airborne with <2g Acceleration
+ *                        8=Airborne with <4g Acceleration
+ *     0x03 uint8      Position fixing mode [1=2D Only, 2=3D Only, 3=Auto 2D/3D]
+ *     0x04 int32      Fixed altitude (cm), only for "Position fixing mode" set to 1
+ *     0x08 uint32     Fixed altitude variance (cm²), only for "Position fixing mode" set to 1
+ *     0x0C uint8      Minimum SV elevation (deg)
+ *     0x0D uint8      Dead reckoning timeout (s)
+ *     0x0E uint16     PDOP Mask (stored as 10 times the GUI value)
+ *     0x10 uint16     TDOP Mask (stored as 10 times the GUI value)
+ *     0x12 uint16     Position Accuracy Mask (m)
+ *     0x14 uint16     Time Accuracy Mask (m)
+ *     0x16 uint8      Static hold threshold (cm/s)
+ *     0x17 uint8      <reserved> (set to zero)
+ *     0x18 uint32     <reserved> (set to zero)
+ *     0x1C uint32     <reserved> (set to zero)
+ *     0x20 uint32     <reserved> (set to zero)
  *
  * [ struct #5 ]
  * -------------
