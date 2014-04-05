@@ -102,15 +102,33 @@
  *
  * [ struct #3 ]
  * -------------
+ * - configures: Navigation Engine (Expert Settings)
  * - offset in file: 0x46
+ * - name: CFG-NAVX5 [ref1, pp. 121]
  * - payload:
- *     0x00 uint8[10]  <unused>
- *     0x0A uint8      Navigation Min. SVs [3;6]
- *     0x0B uint8      <unused>
- *     0x0C uint8      Navigation Signal Min. Strength [5;50 dbHz]
- *     0x0D uint8      <unused>
- *     0x0E uint8      Initial Fix must be 3D [0=OFF, 1=ON]
- *     0x0F uint8[25]  <unused>
+ *     0x00 uint16     Message version (must be 0)
+ *     0x02 uint16     Settings selector (bitmask)
+ *                         .... .... .... .x..  Apply min/max SVs settings
+ *                         .... .... .... x...  Apply minimum C/N0 setting
+ *                         .... .... .x.. ....  Apply initial 3D fix settings
+ *                         .... ..x. .... ....  Apply GPS weeknumber rollover settings
+ *     0x04 uint32     <reserved> (set to 0)
+ *     0x08 uint8      <reserved> (set to 0)
+ *     0x09 uint8      <reserved> (set to 0)
+ *     0x0A uint8      Minimum number of satellites for navigation (#SVs)
+ *     0x0B uint8      Maximum number of satellites for navigation (#SVs)
+ *     0x0C uint8      Minimum satellite signal level for navigation (dbHz), "min CN/0" for short
+ *     0x0D uint8      <reserved> (set to 0)
+ *     0x0E uint8      Initial fix must be 3D [0=OFF, 1=ON]
+ *     0x0F uint8      <reserved> (set to 0)
+ *     0x10 uint8      <reserved> (set to 0)
+ *     0x11 uint8      <reserved> (set to 0)
+ *     0x12 uint16     GPS week rollover number, 0 means firmware default
+ *     0x14 uint32     <reserved> (set to 0)
+ *     0x18 uint32     <reserved> (set to 0)
+ *     0x1C uint32     <reserved> (set to 0)
+ *     0x20 uint32     <reserved> (set to 0)
+ *     0x24 uint32     <reserved> (set to 0)
  *
  * [ struct #4 ]
  * -------------
