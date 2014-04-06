@@ -24,7 +24,7 @@ bool testGpsChecksums( std::string filename )
 		return false;
 
 	bool passed = false;
-	GpsBin * original = toWbt202Gps( buffer );
+	GpsBin * original = toGpsBin( buffer );
 
 	if ( original )
 	{

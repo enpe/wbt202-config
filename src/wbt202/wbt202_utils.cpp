@@ -220,7 +220,7 @@ unsigned char* toBinary( const SysBin * sys )
 	return toBinary< SysBin >( sys );
 }
 
-GpsBin * toWbt202Gps( const std::vector<char> & data )
+GpsBin * toGpsBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 
@@ -260,7 +260,7 @@ GpsBin * toWbt202Gps( const std::vector<char> & data )
 	return gps;
 }
 
-LogBin* toWbt202Log( const std::vector<char> & data )
+LogBin* toLogBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 	assert( data.size() == SIZE_LOG_BIN );

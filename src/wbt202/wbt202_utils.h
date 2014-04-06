@@ -41,14 +41,14 @@ unsigned char* toBinary( const SysBin * sys );
  * The array must be @c BYTE_COUNT_GPS bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-GpsBin* toWbt202Gps( const std::vector<char> & data );
+GpsBin* toGpsBin( const std::vector<char> & data );
 
 /** @brief Interpret array as LOG data.
  *
  * The array must be @c BYTE_COUNT_LOG bytes long. If it isn't, a NULL pointer
  * is returned.
  */
-LogBin* toWbt202Log( const std::vector<char> & data );
+LogBin* toLogBin( const std::vector<char> & data );
 
 /** @brief Interpret array as SYS data.
  *
