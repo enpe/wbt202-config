@@ -46,6 +46,7 @@ endif ()
 # Include directories and sources.
 set( PROJECT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR} )
 include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/src )
+include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/submodules/simpleini )
 include_directories(               ${CMAKE_SOURCE_DIR}/src )
 
 # Build targets
