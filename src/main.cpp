@@ -10,62 +10,26 @@ std::string dataPath = "./WBT202/SYS/";
 
 namespace {
 
-void testGps( std::string path )
+bool loadWbt202( Wbt202 & wbt202, std::string path )
 {
-	std::string filename = path + "/GPS.BIN";
-	std::cout << std::endl << "file: " << filename << std::endl;
+	std::string gpsFilename = path + "/GPS.BIN";
+	std::string logFilename = path + "/LOG.BIN";
+	std::string sysFilename = path + "/SYS.BIN";
 
-	std::vector<char> buffer = readFile( filename.c_str() );
-	if ( buffer.empty() )
-		return;
+	GpsBin * gps = toGpsBin( readFile( gpsFilename.c_str() ) );
+	LogBin * log = toLogBin( readFile( logFilename.c_str() ) );
+	SysBin * sys = toSysBin( readFile( sysFilename.c_str() ) );
 
-	GpsBin * gps = toGpsBin( buffer );
-	assert( gps );
+	if ( gps && log && sys )
+	{
+		wbt202.gps = *gps;
+		wbt202.log = *log;
+		wbt202.sys = *sys;
 
-	if ( gps )
-		std::cout << *gps << std::endl;
-	else
-		std::cout << "Cannot display the contents of " << filename << std::endl;
+		return true;
+	}
 
-	delete gps;
-}
-
-void testLog( std::string path )
-{
-	std::string filename = path + "/LOG.BIN";
-	std::cout << std::endl << "file: " << filename << std::endl;
-
-	std::vector<char> buffer = readFile( filename.c_str() );
-	if ( buffer.empty() )
-		return;
-
-	LogBin * log = toLogBin( buffer );
-
-	if ( log )
-		std::cout << *log << std::endl;
-	else
-		std::cout << "Cannot display the contents of " << filename << std::endl;
-
-	delete log;
-}
-
-void testSys( std::string path )
-{
-	std::string filename = path + "/SYS.BIN";
-	std::cout << std::endl << "file: " << filename << std::endl;
-
-	std::vector<char> buffer = readFile( filename.c_str() );
-	if ( buffer.empty() )
-		return;
-
-	SysBin * sys = toSysBin( buffer );
-
-	if ( sys )
-		std::cout << *sys << std::endl;
-	else
-		std::cout << "Cannot display the contents of " << filename << std::endl;
-
-	delete sys;
+	return false;
 }
 
 } // namespace
@@ -75,13 +39,22 @@ int main( int argc, char ** argv )
 	if ( argc == 2 )
 		dataPath = argv[1];
 
-	std::cout << "System uses " << ( IS_BIG_ENDIAN ? " B I G " : "little" );
-	std::cout << " endian byte order." << std::endl;
+	Wbt202 wbt202;
+	bool success = loadWbt202( wbt202, dataPath );
+	assert( success );
 
-	// Test-load each binary config file.
-	testGps( dataPath );
-	testLog( dataPath );
-	testSys( dataPath );
+	if ( success )
+	{
+		std::cout << wbt202.gps << std::endl;
+		std::cout << wbt202.log << std::endl;
+		std::cout << wbt202.sys << std::endl;
+
+		saveIni( "wbt202.ini", wbt202 );
+	}
+	else
+	{
+		std::cout << "Could not load files from " << dataPath << std::endl;
+	}
 
 	return 0;
 }

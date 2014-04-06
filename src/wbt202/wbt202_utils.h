@@ -79,4 +79,7 @@ std::ostream& operator<<( std::ostream & os, const LogBin & log );
 std::ostream& operator<<( std::ostream & os, const SysBin & sys );
 /** @} */
 
+void saveIni( const std::string filename, const Wbt202 & wbt202 );
+void loadIni( Wbt202 & wbt202, const std::string filename );
+
 #endif // WBT202_UTILS_H

@@ -1,6 +1,8 @@
 
 #include "wbt202_utils.h"
 
+#include <SimpleIni.h>
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -481,3 +483,70 @@ std::ostream& operator<<( std::ostream & os, const SysBin & sys )
 
 	return os;
 }
+
+
+void saveIni( const std::string filename, const Wbt202 & wbt202 )
+{
+	// TODO What is a good data structure to represent the data fields, their description, comments, units, range, etc.?
+	// TODO Add checks before writing the data to the file.
+	// TODO What are the relevant field that we want to have in the ini-files?
+	// TODO Return value of this function: bool vs. enum?
+
+	CSimpleIniA ini;
+
+	const GpsBin & gps = wbt202.gps;
+	const LogBin & log = wbt202.log;
+
+	// SYS.BIN
+	const SysBin & sys = wbt202.sys;
+	std::string device_name = "WINTEC";
+	std::string device_info = "";
+	std::string password    = "";
+
+	// Check if a device name has been set.
+	if ( sys.device_name[0] != '\0' )
+		device_name = reinterpret_cast<const char*>( sys.device_name );
+
+	// Check if a device description has been set.
+	if ( sys.device_info[0] != '\0' )
+		device_info = reinterpret_cast<const char*>( sys.device_info );
+
+	// Check if a password has been set.
+	if ( enabledPassword( sys.password ) )
+	{
+		uint32_t decoded = decodePassword( sys.password );
+		assert( sys.password == encodePassword( decoded ) );
+
+		std::ostringstream oss;
+		oss << decodePassword( sys.password );
+
+		password = oss.str();
+	}
+
+	ini.SetValue(     "GPS", NULL,                   NULL,                   "# GPS-specific settings." );
+	// TODO continue ...
+
+	ini.SetValue(     "LOG", NULL,                   NULL,                   "# LOG-specific settings." );
+	// TODO continue ...
+
+	ini.SetValue(     "SYS", NULL,                   NULL,                   "# Device-specific settings." );
+	ini.SetValue(     "SYS", "device_name",          device_name.c_str(),    "# Name of the device when connected to the computer using the mass storage mode (max. 19 characters)." );
+	ini.SetValue(     "SYS", "device_info",          device_info.c_str(),    "# A short description of the device (max. 19 characters)." );
+	ini.SetLongValue( "SYS", "restart_mode",         sys.restart_mode,       "# Mode used to get a first fix on the next start of the device." );
+	ini.SetLongValue( "SYS", "shake_mode",           sys.shake_mode,         "# Activate the tracker when shaking the device." );
+	ini.SetLongValue( "SYS", "shake_mode_timeout",   sys.shake_mode_timeout, "# Time out for the deactivation of the device, if it is not moved (in s/h/...)." );
+	ini.SetValue(     "SYS", "password",             password.c_str(),       "# Password. Its use is not suggested ..." );
+	ini.SetLongValue( "SYS", "time_zone",            sys.time_zone,          "# Offset in hours from UTC to your local time zone." );
+	ini.SetLongValue( "SYS", "unit",                 sys.unit,               "# Units: metric or imperial." );
+
+	ini.SaveFile( filename.c_str(), true );
+}
+
+void loadIni( Wbt202 & wbt202, const std::string filename )
+{
+	// TODO What default values should be used?
+	// TODO Compute checksums, etc. and add checks.
+	// TODO Return value of this function: bool vs. enum?
+}
+
+
