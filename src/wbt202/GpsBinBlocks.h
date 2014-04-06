@@ -34,8 +34,6 @@ struct Block_16
 	uint8_t   unused_04[4];  ///< 0x04 <unused>
 
 	BlockFooter footer;
-
-	Block_16();
 };
 
 struct Block_26
