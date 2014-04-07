@@ -23,10 +23,10 @@
  * | 0x0a   | uint16    | Low (Valid Speed for Record, (2,[0xc]-1 (km/hr)))
  * | 0x0c   | uint16    | Middle (Valid Speed for Record, (3,[0xe]-1 (km/hr)))
  * | 0x0e   | uint16    | High (Valid Speed for Record, (4,[0x7]-1 (km/hr)))
- * | 0x10   | uint16    | Lowest (Log Time Interval, (1;3600 (s)))
- * | 0x12   | uint16    | Low (Log Time Interval, (1;3600 (s)))
- * | 0x14   | uint16    | Middle (Log Time Interval, (1;3600 (s)))
- * | 0x16   | uint16    | High (Log Time Interval, (1;3600 (s)))
+ * | 0x10   | uint16    | Lowest (Log Time Interval, (1;3600 (s))) ; Time interval in which track points are added if the speed is between the thresholds "Low" and "Lowest".
+ * | 0x12   | uint16    | Low (Log Time Interval, (1;3600 (s))); Time interval in which track points are added if the speed is between the thresholds "Low" and "Middle".
+ * | 0x14   | uint16    | Middle (Log Time Interval, (1;3600 (s))); Time interval in which track points are added if the speed is between the thresholds "Middle" and "High".
+ * | 0x16   | uint16    | High (Log Time Interval, (1;3600 (s))); Time interval in which track points are added if the speed is between the thresholds "High" and "Highest".
  * | 0x18   | uint16    | seconds/point (By Time Interval, max=65535)
  * | 0x1a   | uint16    | meters/point (By Distance Interval, max=5000)
  * | 0x1c   | uint8[55] | UNKNOWN
