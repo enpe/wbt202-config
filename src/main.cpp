@@ -32,6 +32,45 @@ bool loadWbt202( Wbt202 & wbt202, std::string path )
 	return false;
 }
 
+void testIniWrite( const Wbt202 & wbt202 )
+{
+	Wbt202 other = wbt202;
+
+	Wbt202Status status;
+
+	status = setDeviceName( other, "NSA-bug" );
+	assert( status == WBT202_SUCCESS );
+
+	status = setDeviceInfo( other, "Ach, wie gut ..." );
+	assert( status == WBT202_SUCCESS );
+
+	status = setRestartMode( other, COLD_START );
+	assert( status == WBT202_SUCCESS );
+
+	status = setShakeMode( other, ON );
+	assert( status == WBT202_SUCCESS );
+
+	status = setShakeModeTimeout( other, 151 );
+	assert( status == WBT202_SUCCESS );
+
+	status = setPowerOffTimout( other, 123 );
+	assert( status == WBT202_SUCCESS );
+
+	status = setSystemOfUnits( other, IMPERIAL );
+	assert( status == WBT202_SUCCESS );
+
+	status = setTimeZone( other, -150 );
+	assert( status == WBT202_SUCCESS );
+
+	saveIni( "other.ini", other );
+	saveIni( "wbt202.ini", wbt202 );
+}
+
+void testIniRead( std::string filename )
+{
+
+}
+
 } // namespace
 
 int main( int argc, char ** argv )
@@ -50,6 +89,8 @@ int main( int argc, char ** argv )
 		std::cout << wbt202.sys << std::endl;
 
 		saveIni( "wbt202.ini", wbt202 );
+
+		testIniWrite( wbt202 );
 	}
 	else
 	{

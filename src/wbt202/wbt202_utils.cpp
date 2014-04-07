@@ -499,7 +499,7 @@ void saveIni( const std::string filename, const Wbt202 & wbt202 )
 
 	// SYS.BIN
 	const SysBin & sys = wbt202.sys;
-	std::string device_name = "WINTEC";
+	std::string device_name = "";
 	std::string device_info = "";
 	std::string password    = "";
 
