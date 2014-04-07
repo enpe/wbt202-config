@@ -77,7 +77,7 @@ static const uint8_t factorSysBin[ SIZE_SYS_BIN ] =
 /** @brief Types of restarts. */
 enum RestartMode
 {
-	NO_START=0,
+	AUTOMATIC_START=0,
 	COLD_START=1,
 	WARM_START=2,
 	HOT_START=3
