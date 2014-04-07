@@ -5,3 +5,4 @@ doc/html/*
 CMakeLists.txt.user
 build/*
 .DS_Store
+ignored/*
