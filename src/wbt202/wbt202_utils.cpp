@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -480,4 +481,159 @@ std::ostream& operator<<( std::ostream & os, const SysBin & sys )
 	os << std::vector<Field>( fields, fields + count );
 
 	return os;
+}
+
+std::string getWbt202StatusString( Wbt202Status status )
+{
+	std::string statusString;
+
+	switch ( status )
+	{
+		case WBT202_DEVICE_NAME_TOO_LONG:
+			statusString = "The device name is too long (max. 19 characters).";
+			break;
+
+		case WBT202_DEVICE_INFO_TOO_LONG:
+			statusString = "The device info is too long (max. 19 characters).";
+			break;
+
+		case WBT202_UNKNOWN_ERROR:
+		default:
+			statusString = "Unknown error.";
+			break;
+	}
+
+	return statusString;
+}
+
+
+Wbt202Status setDeviceName( Wbt202 & wbt202, std::string name )
+{
+	size_t length = name.length();
+	size_t maxLength = 20; // TODO This should not be hard-coded (here).
+
+	if ( length >= maxLength )
+		return WBT202_DEVICE_NAME_TOO_LONG;
+
+	memset( wbt202.sys.device_name, 0, maxLength );
+	std::copy( name.begin(), name.end(), wbt202.sys.device_name );
+
+	return WBT202_SUCCESS;
+}
+
+Wbt202Status setDeviceInfo( Wbt202 & wbt202, std::string info )
+{
+	size_t length = info.length();
+	size_t maxLength = 20; // TODO This should not be hard-coded (here).
+
+	if ( length >= maxLength )
+		return WBT202_DEVICE_NAME_TOO_LONG;
+
+	memset( wbt202.sys.device_name, 0, maxLength );
+	std::copy( info.begin(), info.end(), wbt202.sys.device_name );
+
+	return WBT202_SUCCESS;
+}
+
+Wbt202Status setRestartMode( Wbt202 & wbt202, RestartMode mode )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+
+	switch ( mode )
+	{
+		case AUTOMATIC_START:
+		case COLD_START:
+		case WARM_START:
+		case HOT_START:
+			wbt202.sys.restart_mode = mode;
+			status = WBT202_SUCCESS;
+			break;
+
+		default:
+			status = WBT202_RESTART_MODE_INVALID;
+			break;
+	}
+
+	return status;
+}
+
+Wbt202Status setShakeMode( Wbt202 & wbt202, Wbt202OnOff onoff )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( onoff == ON || onoff == OFF )
+	{
+		wbt202.sys.shake_mode = onoff;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setShakeModeTimeout( Wbt202 & wbt202, uint16_t timeout )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+	uint16_t minTimeout = 60;   // TODO This should not be hard-coded (here).
+	uint16_t maxTimeout = 7200; // TODO This should not be hard-coded (here).
+
+	if ( timeout < minTimeout || timeout > maxTimeout )
+	{
+		status = WBT202_VALUE_OUT_OF_RANGE;
+	}
+	else
+	{
+		wbt202.sys.shake_mode_timeout = timeout;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+	uint16_t minTimeout = 0;    // TODO This should not be hard-coded (here).
+	uint16_t maxTimeout = 3600; // TODO This should not be hard-coded (here).
+
+	if ( timeout < minTimeout || timeout > maxTimeout )
+	{
+		status = WBT202_VALUE_OUT_OF_RANGE;
+	}
+	else
+	{
+		wbt202.sys.power_off_timeout = timeout;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setSystemOfUnits( Wbt202 & wbt202, SystemOfUnits unit )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( unit == METRIC || unit== IMPERIAL )
+	{
+		wbt202.sys.unit = unit;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setTimeZone( Wbt202 & wbt202, int16_t offset )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( -1400 <= offset && offset <= 1400 )
+	{
+		wbt202.sys.time_zone = offset;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
 }

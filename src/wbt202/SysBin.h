@@ -83,6 +83,12 @@ enum RestartMode
 	HOT_START=3
 };
 
+enum SystemOfUnits
+{
+	METRIC = 0,
+	IMPERIAL = 1
+};
+
 #pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 /** @brief Overlay for the binary data in SYS.BIN. */
