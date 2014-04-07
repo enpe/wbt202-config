@@ -277,18 +277,18 @@ LogBin* toLogBin( const std::vector<char> & data )
 		// convert the data to big-endian byte order.
 		if ( IS_BIG_ENDIAN )
 		{
-			convertByteOrder( log->magic_begin          );
-			convertByteOrder( log->valid_speed_highest  );
-			convertByteOrder( log->valid_speed_low      );
-			convertByteOrder( log->valid_speed_middle   );
-			convertByteOrder( log->valid_speed_high     );
-			convertByteOrder( log->time_interval_lowest );
-			convertByteOrder( log->time_interval_low    );
-			convertByteOrder( log->time_interval_middle );
-			convertByteOrder( log->time_interval_high   );
-			convertByteOrder( log->seconds_point        );
-			convertByteOrder( log->meters_point         );
-			convertByteOrder( log->magic_end            );
+			convertByteOrder( log->magic_begin   );
+			convertByteOrder( log->speed_highest );
+			convertByteOrder( log->speed_low     );
+			convertByteOrder( log->speed_middle  );
+			convertByteOrder( log->speed_high    );
+			convertByteOrder( log->time_lowest   );
+			convertByteOrder( log->time_low      );
+			convertByteOrder( log->time_middle   );
+			convertByteOrder( log->time_high     );
+			convertByteOrder( log->seconds_point );
+			convertByteOrder( log->meters_point  );
+			convertByteOrder( log->magic_end     );
 		}
 	}
 
@@ -380,23 +380,23 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 {
 	Field fields[] =
 	{
-		{ "dirty",                  toString( gps.dirty ? "true" : "false"         ), ""     },
-		{ "mode",                   toString( gps.gps_mode                         ), ""     }, // TODO Match value to string.
-		{ "gpgll",                  toString( gps.block_16.gpgll ? "on" : "off"    ), ""     },
-		{ "gpvtg",                  toString( gps.block_26.gpvtg ? "on" : "off"    ), ""     },
-		{ "gpzda",                  toString( gps.block_36.gpzda ? "on" : "off"    ), ""     },
-		{ "min_visible_satellites", toString( gps.block_46.min_visible_satellites  ), ""     },
-		{ "min_signal_strength",    toString( gps.block_46.min_signal_strength     ), "dbHz" },
-		{ "initial_fix_3d",         toString( gps.block_46.initial_fix_3d          ), ""     },
-		{ "fix_mode",               toString( gps.block_76.fix_mode                ), ""     }, // TODO Match value to string.
-		{ "fix_altitude_2d",        toString( gps.block_76.fix_altitude_2d         ), "m"    },
-		{ "pdop_mask",              toString( gps.block_76.pdop_mask               ), ""     },
-		{ "tdop_mask",              toString( gps.block_76.tdop_mask               ), ""     },
-		{ "p_accuracy_map",         toString( gps.block_76.p_accuracy_map          ), "m"    },
-		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map          ), "m"    },
-		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle         ), "µs"   },
-		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle           ), "µs"   },
-		{ "sbas",                   toString( gps.cfg_sbas.sbas_mode ? "on" : "off"     ), ""     }
+		{ "dirty",                  toString( gps.dirty ? "true" : "false"          ), ""     },
+		{ "mode",                   toString( gps.gps_mode                          ), ""     }, // TODO Match value to string.
+		{ "gpgll",                  toString( gps.block_16.gpgll ? "on" : "off"     ), ""     },
+		{ "gpvtg",                  toString( gps.block_26.gpvtg ? "on" : "off"     ), ""     },
+		{ "gpzda",                  toString( gps.block_36.gpzda ? "on" : "off"     ), ""     },
+		{ "min_visible_satellites", toString( gps.block_46.min_visible_satellites   ), ""     },
+		{ "min_signal_strength",    toString( gps.block_46.min_signal_strength      ), "dbHz" },
+		{ "initial_fix_3d",         toString( gps.block_46.initial_fix_3d           ), ""     },
+		{ "fix_mode",               toString( gps.block_76.fix_mode                 ), ""     }, // TODO Match value to string.
+		{ "fix_altitude_2d",        toString( gps.block_76.fix_altitude_2d          ), "m"    },
+		{ "pdop_mask",              toString( gps.block_76.pdop_mask                ), ""     },
+		{ "tdop_mask",              toString( gps.block_76.tdop_mask                ), ""     },
+		{ "p_accuracy_map",         toString( gps.block_76.p_accuracy_map           ), "m"    },
+		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map           ), "m"    },
+		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle          ), "µs"   },
+		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle            ), "µs"   },
+		{ "sbas",                   toString( gps.cfg_sbas.sbas_mode ? "on" : "off" ), ""     }
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );
@@ -408,22 +408,22 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 std::ostream & operator<<( std::ostream & os, const LogBin & log )
 {
 	Field fields[] = {
-		{ "magic_begin",           toString( log.magic_begin           ), "", },
-		{ "log_mode",              toString( log.log_mode              ), "", },
-		{ "log_mode_user_defined", toString( log.log_mode_user_defined ), "", },
-		{ "valid_speed_lowest",    toString( log.valid_speed_lowest    ), "", },
-		{ "valid_speed_highest",   toString( log.valid_speed_highest   ), "", },
-		{ "deg_point",             toString( log.deg_point             ), "", },
-		{ "valid_speed_low",       toString( log.valid_speed_low       ), "", },
-		{ "valid_speed_middle",    toString( log.valid_speed_middle    ), "", },
-		{ "valid_speed_high",      toString( log.valid_speed_high      ), "", },
-		{ "time_interval_lowest",  toString( log.time_interval_lowest  ), "", },
-		{ "time_interval_low",     toString( log.time_interval_low     ), "", },
-		{ "time_interval_middle",  toString( log.time_interval_middle  ), "", },
-		{ "time_interval_high",    toString( log.time_interval_high    ), "", },
-		{ "seconds_point",         toString( log.seconds_point         ), "", },
-		{ "meters_point",          toString( log.meters_point          ), "", },
-		{ "magic_end",             toString( log.magic_end             ), "", },
+		{ "magic_begin",           toString( log.magic_begin     ), "", },
+		{ "log_mode",              toString( log.preset_log_mode ), "", },
+		{ "log_mode_user_defined", toString( log.log_mode        ), "", },
+		{ "speed_lowest",          toString( log.speed_lowest    ), "", },
+		{ "speed_highest",         toString( log.speed_highest   ), "", },
+		{ "degrees_point",         toString( log.degrees_point   ), "", },
+		{ "speed_low",             toString( log.speed_low       ), "", },
+		{ "speed_middle",          toString( log.speed_middle    ), "", },
+		{ "speed_high",            toString( log.speed_high      ), "", },
+		{ "time_lowest",           toString( log.time_lowest     ), "", },
+		{ "time_low",              toString( log.time_low        ), "", },
+		{ "time_middle",           toString( log.time_middle     ), "", },
+		{ "time_high",             toString( log.time_high       ), "", },
+		{ "seconds_point",         toString( log.seconds_point   ), "", },
+		{ "meters_point",          toString( log.meters_point    ), "", },
+		{ "magic_end",             toString( log.magic_end       ), "", },
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );
