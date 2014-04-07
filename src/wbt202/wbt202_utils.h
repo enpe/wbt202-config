@@ -69,6 +69,35 @@ SysBin* toSysBin( const std::vector<char> & data );
  */
 void setChecksum( GpsBin & gps );
 
+enum Wbt202OnOff
+{
+	OFF = 0,
+	ON  = 1
+};
+
+enum Wbt202Status
+{
+	WBT202_SUCCESS = 0,
+	WBT202_DEVICE_NAME_TOO_LONG,
+	WBT202_DEVICE_INFO_TOO_LONG,
+	WBT202_RESTART_MODE_INVALID,
+	WBT202_VALUE_OUT_OF_RANGE,
+	WBT202_UNKNOWN_ERROR
+};
+
+std::string getWbt202StatusString( Wbt202Status status );
+
+Wbt202Status setDeviceName( struct Wbt202 & wbt202, std::string name = "" );
+Wbt202Status setDeviceInfo( struct Wbt202 & wbt202, std::string info = "" );
+Wbt202Status setRestartMode( struct Wbt202 & wbt202, RestartMode mode = AUTOMATIC_START );
+Wbt202Status setShakeMode( struct Wbt202 & wbt202, Wbt202OnOff onoff = OFF );
+Wbt202Status setShakeModeTimeout( struct Wbt202 & wbt202, uint16_t timeout = 300 );
+Wbt202Status setPowerOffTimout( struct Wbt202 & wbt202, uint16_t timeout = 600 );
+Wbt202Status setSystemOfUnits( struct Wbt202 & wbt202, SystemOfUnits unit = METRIC );
+Wbt202Status setTimeZone( struct Wbt202 & wbt202, int16_t offset = 0 );
+
+
+
 std::vector<char> readFile( const char * filename );
 
 /** @name Overloaded operators for console output.

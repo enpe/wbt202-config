@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -279,18 +280,18 @@ LogBin* toLogBin( const std::vector<char> & data )
 		// convert the data to big-endian byte order.
 		if ( IS_BIG_ENDIAN )
 		{
-			convertByteOrder( log->magic_begin          );
-			convertByteOrder( log->valid_speed_highest  );
-			convertByteOrder( log->valid_speed_low      );
-			convertByteOrder( log->valid_speed_middle   );
-			convertByteOrder( log->valid_speed_high     );
-			convertByteOrder( log->time_interval_lowest );
-			convertByteOrder( log->time_interval_low    );
-			convertByteOrder( log->time_interval_middle );
-			convertByteOrder( log->time_interval_high   );
-			convertByteOrder( log->seconds_point        );
-			convertByteOrder( log->meters_point         );
-			convertByteOrder( log->magic_end            );
+			convertByteOrder( log->magic_begin   );
+			convertByteOrder( log->speed_highest );
+			convertByteOrder( log->speed_low     );
+			convertByteOrder( log->speed_middle  );
+			convertByteOrder( log->speed_high    );
+			convertByteOrder( log->time_lowest   );
+			convertByteOrder( log->time_low      );
+			convertByteOrder( log->time_middle   );
+			convertByteOrder( log->time_high     );
+			convertByteOrder( log->seconds_point );
+			convertByteOrder( log->meters_point  );
+			convertByteOrder( log->magic_end     );
 		}
 	}
 
@@ -382,23 +383,23 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 {
 	Field fields[] =
 	{
-		{ "dirty",                  toString( gps.dirty ? "true" : "false"         ), ""     },
-		{ "mode",                   toString( gps.gps_mode                         ), ""     }, // TODO Match value to string.
-		{ "gpgll",                  toString( gps.block_16.gpgll ? "on" : "off"    ), ""     },
-		{ "gpvtg",                  toString( gps.block_26.gpvtg ? "on" : "off"    ), ""     },
-		{ "gpzda",                  toString( gps.block_36.gpzda ? "on" : "off"    ), ""     },
-		{ "min_visible_satellites", toString( gps.block_46.min_visible_satellites  ), ""     },
-		{ "min_signal_strength",    toString( gps.block_46.min_signal_strength     ), "dbHz" },
-		{ "initial_fix_3d",         toString( gps.block_46.initial_fix_3d          ), ""     },
-		{ "fix_mode",               toString( gps.block_76.fix_mode                ), ""     }, // TODO Match value to string.
-		{ "fix_altitude_2d",        toString( gps.block_76.fix_altitude_2d         ), "m"    },
-		{ "pdop_mask",              toString( gps.block_76.pdop_mask               ), ""     },
-		{ "tdop_mask",              toString( gps.block_76.tdop_mask               ), ""     },
-		{ "p_accuracy_map",         toString( gps.block_76.p_accuracy_map          ), "m"    },
-		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map          ), "m"    },
-		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle         ), "µs"   },
-		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle           ), "µs"   },
-		{ "sbas",                   toString( gps.cfg_sbas.sbas_mode ? "on" : "off"     ), ""     }
+		{ "dirty",                  toString( gps.dirty ? "true" : "false"          ), ""     },
+		{ "mode",                   toString( gps.gps_mode                          ), ""     }, // TODO Match value to string.
+		{ "gpgll",                  toString( gps.block_16.gpgll ? "on" : "off"     ), ""     },
+		{ "gpvtg",                  toString( gps.block_26.gpvtg ? "on" : "off"     ), ""     },
+		{ "gpzda",                  toString( gps.block_36.gpzda ? "on" : "off"     ), ""     },
+		{ "min_visible_satellites", toString( gps.block_46.min_visible_satellites   ), ""     },
+		{ "min_signal_strength",    toString( gps.block_46.min_signal_strength      ), "dbHz" },
+		{ "initial_fix_3d",         toString( gps.block_46.initial_fix_3d           ), ""     },
+		{ "fix_mode",               toString( gps.block_76.fix_mode                 ), ""     }, // TODO Match value to string.
+		{ "fix_altitude_2d",        toString( gps.block_76.fix_altitude_2d          ), "m"    },
+		{ "pdop_mask",              toString( gps.block_76.pdop_mask                ), ""     },
+		{ "tdop_mask",              toString( gps.block_76.tdop_mask                ), ""     },
+		{ "p_accuracy_map",         toString( gps.block_76.p_accuracy_map           ), "m"    },
+		{ "t_accuracy_map",         toString( gps.block_76.t_accuracy_map           ), "m"    },
+		{ "led_blink_cycle",        toString( gps.block_A2.led_blink_cycle          ), "µs"   },
+		{ "led_off_cycle",          toString( gps.block_A2.led_off_cycle            ), "µs"   },
+		{ "sbas",                   toString( gps.cfg_sbas.sbas_mode ? "on" : "off" ), ""     }
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );
@@ -410,22 +411,22 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 std::ostream & operator<<( std::ostream & os, const LogBin & log )
 {
 	Field fields[] = {
-		{ "magic_begin",           toString( log.magic_begin           ), "", },
-		{ "log_mode",              toString( log.log_mode              ), "", },
-		{ "log_mode_user_defined", toString( log.log_mode_user_defined ), "", },
-		{ "valid_speed_lowest",    toString( log.valid_speed_lowest    ), "", },
-		{ "valid_speed_highest",   toString( log.valid_speed_highest   ), "", },
-		{ "deg_point",             toString( log.deg_point             ), "", },
-		{ "valid_speed_low",       toString( log.valid_speed_low       ), "", },
-		{ "valid_speed_middle",    toString( log.valid_speed_middle    ), "", },
-		{ "valid_speed_high",      toString( log.valid_speed_high      ), "", },
-		{ "time_interval_lowest",  toString( log.time_interval_lowest  ), "", },
-		{ "time_interval_low",     toString( log.time_interval_low     ), "", },
-		{ "time_interval_middle",  toString( log.time_interval_middle  ), "", },
-		{ "time_interval_high",    toString( log.time_interval_high    ), "", },
-		{ "seconds_point",         toString( log.seconds_point         ), "", },
-		{ "meters_point",          toString( log.meters_point          ), "", },
-		{ "magic_end",             toString( log.magic_end             ), "", },
+		{ "magic_begin",           toString( log.magic_begin     ), "", },
+		{ "log_mode",              toString( log.preset_log_mode ), "", },
+		{ "log_mode_user_defined", toString( log.log_mode        ), "", },
+		{ "speed_lowest",          toString( log.speed_lowest    ), "", },
+		{ "speed_highest",         toString( log.speed_highest   ), "", },
+		{ "degrees_point",         toString( log.degrees_point   ), "", },
+		{ "speed_low",             toString( log.speed_low       ), "", },
+		{ "speed_middle",          toString( log.speed_middle    ), "", },
+		{ "speed_high",            toString( log.speed_high      ), "", },
+		{ "time_lowest",           toString( log.time_lowest     ), "", },
+		{ "time_low",              toString( log.time_low        ), "", },
+		{ "time_middle",           toString( log.time_middle     ), "", },
+		{ "time_high",             toString( log.time_high       ), "", },
+		{ "seconds_point",         toString( log.seconds_point   ), "", },
+		{ "meters_point",          toString( log.meters_point    ), "", },
+		{ "magic_end",             toString( log.magic_end       ), "", },
 	};
 
 	int count = ( sizeof(fields) / sizeof(Field) );
@@ -483,7 +484,6 @@ std::ostream& operator<<( std::ostream & os, const SysBin & sys )
 
 	return os;
 }
-
 
 void saveIni( const std::string filename, const Wbt202 & wbt202 )
 {
@@ -549,4 +549,157 @@ void loadIni( Wbt202 & wbt202, const std::string filename )
 	// TODO Return value of this function: bool vs. enum?
 }
 
+std::string getWbt202StatusString( Wbt202Status status )
+{
+	std::string statusString;
 
+	switch ( status )
+	{
+		case WBT202_DEVICE_NAME_TOO_LONG:
+			statusString = "The device name is too long (max. 19 characters).";
+			break;
+
+		case WBT202_DEVICE_INFO_TOO_LONG:
+			statusString = "The device info is too long (max. 19 characters).";
+			break;
+
+		case WBT202_UNKNOWN_ERROR:
+		default:
+			statusString = "Unknown error.";
+			break;
+	}
+
+	return statusString;
+}
+
+
+Wbt202Status setDeviceName( Wbt202 & wbt202, std::string name )
+{
+	size_t length = name.length();
+	size_t maxLength = 20; // TODO This should not be hard-coded (here).
+
+	if ( length >= maxLength )
+		return WBT202_DEVICE_NAME_TOO_LONG;
+
+	memset( wbt202.sys.device_name, 0, maxLength );
+	std::copy( name.begin(), name.end(), wbt202.sys.device_name );
+
+	return WBT202_SUCCESS;
+}
+
+Wbt202Status setDeviceInfo( Wbt202 & wbt202, std::string info )
+{
+	size_t length = info.length();
+	size_t maxLength = 20; // TODO This should not be hard-coded (here).
+
+	if ( length >= maxLength )
+		return WBT202_DEVICE_NAME_TOO_LONG;
+
+	memset( wbt202.sys.device_name, 0, maxLength );
+	std::copy( info.begin(), info.end(), wbt202.sys.device_name );
+
+	return WBT202_SUCCESS;
+}
+
+Wbt202Status setRestartMode( Wbt202 & wbt202, RestartMode mode )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+
+	switch ( mode )
+	{
+		case AUTOMATIC_START:
+		case COLD_START:
+		case WARM_START:
+		case HOT_START:
+			wbt202.sys.restart_mode = mode;
+			status = WBT202_SUCCESS;
+			break;
+
+		default:
+			status = WBT202_RESTART_MODE_INVALID;
+			break;
+	}
+
+	return status;
+}
+
+Wbt202Status setShakeMode( Wbt202 & wbt202, Wbt202OnOff onoff )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( onoff == ON || onoff == OFF )
+	{
+		wbt202.sys.shake_mode = onoff;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setShakeModeTimeout( Wbt202 & wbt202, uint16_t timeout )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+	uint16_t minTimeout = 60;   // TODO This should not be hard-coded (here).
+	uint16_t maxTimeout = 7200; // TODO This should not be hard-coded (here).
+
+	if ( timeout < minTimeout || timeout > maxTimeout )
+	{
+		status = WBT202_VALUE_OUT_OF_RANGE;
+	}
+	else
+	{
+		wbt202.sys.shake_mode_timeout = timeout;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
+{
+	Wbt202Status status = WBT202_UNKNOWN_ERROR;
+	uint16_t minTimeout = 0;    // TODO This should not be hard-coded (here).
+	uint16_t maxTimeout = 3600; // TODO This should not be hard-coded (here).
+
+	if ( timeout < minTimeout || timeout > maxTimeout )
+	{
+		status = WBT202_VALUE_OUT_OF_RANGE;
+	}
+	else
+	{
+		wbt202.sys.power_off_timeout = timeout;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setSystemOfUnits( Wbt202 & wbt202, SystemOfUnits unit )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( unit == METRIC || unit== IMPERIAL )
+	{
+		wbt202.sys.unit = unit;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
+
+
+Wbt202Status setTimeZone( Wbt202 & wbt202, int16_t offset )
+{
+	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
+
+	if ( -1400 <= offset && offset <= 1400 )
+	{
+		wbt202.sys.time_zone = offset;
+		status = WBT202_SUCCESS;
+	}
+
+	return status;
+}
