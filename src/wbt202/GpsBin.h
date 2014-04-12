@@ -76,29 +76,43 @@
  *     - NOTE: the byte offsets listed for the "payload" are relative to the
  *             payload's first byte, i.e. offset 0x06 in the struct
  *
+ * [ struct #0--2 ]
+ * ----------------
+ * - configures: NMEA Message Rates
+ * - name: CFG-MSG [ref1, p. 100]
+ * - these 3 structs are of the same type, only the target NMEA message
+ *   (specified by message class and ID in the payload) differs (see
+ *   [ref1, p. 40] for an overview)
+ * - payload:
+ *     0x00 uint8      Message class
+ *     0x01 uint8      Message ID
+ *     0x02 uint8[6]   Send rate on I/O target (6 targets)
+ *                         - NMEA messages are sent in a bulk ([ref1] calls them
+ *                           "navigation solutions")
+ *                         - rate 0 disables sending the message
+ *                         - rate 1 sends message in every solution, rate 2
+ *                           sends in every second solution, ...
+ *                         - WBT_Tool and TimeMachineX only change the target at
+ *                           payload offset 0x03 (UART1), other targets are
+ *                           probably not relevant for the WBT-202 (i.e. not
+ *                           connected)
+ *                         - WBT_Tool and TimeMachineX only allow switching the
+ *                           rate between 0 (OFF) and 1 (highest possible rate)
+ *
  * [ struct #0 ]
  * -------------
  * - offset in file: 0x16
- * - payload:
- *     0x00 uint8[3]   <unused>
- *     0x03 uint8      GPGLL [0=DISABLED, 1=ENABLED]
- *     0x04 uint8[4]   <unused>
+ * - target NMEA message in payload: GLL [ref1, p. 43]
  *
  * [ struct #1 ]
  * -------------
  * - offset in file: 0x26
- * - payload:
- *     0x00 uint8[3]   <unused>
- *     0x03 uint8      GPVTG [0=DISABLED, 1=ENABLED]
- *     0x04 uint8[4]   <unused>
+ * - target NMEA message in payload: VTG [ref1, p. 47]
  *
  * [ struct #2 ]
  * -------------
  * - offset in file: 0x36
- * - payload:
- *     0x00 uint8[3]   <unused>
- *     0x03 uint8      GPZDA [0=DISABLED, 1=ENABLED]
- *     0x04 uint8[4]   <unused>
+ * - target NMEA message in payload: ZDA [ref1, p. 50]
  *
  * [ struct #3 ]
  * -------------
