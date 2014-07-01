@@ -20,8 +20,8 @@
  * | 0x2c   | uint8     | GPS Re-Start (1=Cold Start, 2=Warm Start, 3=Hot Start) (bug in WBT_Tool 4.7 will always set "Hot Start" to 2)
  * | 0x2d   | uint16    | CID
  * | 0x2f   | uint16    | PID (must be 0xB202)
- * | 0x31   | uint32    | UNKNOWN, seems to be used only in export to TimeMachineX's TK2 format
- * | 0x35   | uint16    | displayed in WBT_Tool's window title as "FW_Ver:%d.0"
+ * | 0x31   | uint32    | Device serial number, set to 8271 by the WBT device upon entering CDC mode (its usual operation mode for logging)
+ * | 0x35   | uint16    | Device firmware version, displayed in WBT_Tool's window title as "FW_Ver:%d.0"
  * | 0x37   | uint8     | Shake Mode for Power Saving (0=OFF;1=ON)
  * | 0x38   | uint8     | UNKNOWN
  * | 0x39   | uint8     | UNKNOWN
@@ -29,7 +29,7 @@
  * | 0x3c   | uint16    | Bluetooth/Device auto power off setting (60;3600 (s)), 0 = OFF
  * | 0x3e   | uchar[4]  | UNKNOWN
  * | 0x42   | uint32    | Password, stored as 152 * ( P + 11977 ) or as 0xFFFFFFFF if left empty
- * | 0x46   | uchar[30] | UNKNOWN, absolute path to some .TES track file
+ * | 0x46   | uchar[30] | Absolute path to the latest .TES track file the device created, set by the device
  * | 0x64   | uchar[40] | UNKNOWN
  * | 0x8c   | uint8     | Dirty flag, always set to 1 by WBT_Tool prior to writing the file, and set to 0 by the WBT device upon entering CDC mode (its usual operation mode for logging)
  * | 0x8d   | int16     | Reference time zone, 100 * ( difference in hours ): e.g. -150 = -1.5h, range: [-14h, +14h]

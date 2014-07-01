@@ -12,13 +12,13 @@ set( INFO_SUPPORTS_CXX11 "No" )
 if ( ${COMPILER_SUPPORTS_CXX11} )
 	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
-	set( INFO_IS_CXX11_SUPPORT "Yes" )
+	set( INFO_SUPPORTS_CXX11 "Yes" )
 elseif ( ${COMPILER_SUPPORTS_CXX0X} )
 	# Treat support of C++0x as C++11 support because that also suffices for
 	# what we are currently using.
 	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" )
-	set( INFO_IS_CXX11_SUPPORT "Yes (C++0x only)" )
+	set( INFO_SUPPORTS_CXX11 "Yes (C++0x only)" )
 endif( ${COMPILER_SUPPORTS_CXX11} )
 
 # Check the endianness of the system and set define accordingly.
@@ -67,7 +67,7 @@ add_test( NAME GPS_CHECKSUMS    COMMAND test_gps_checksums "${CMAKE_SOURCE_DIR}/
 message( "" )
 message( "  Build configuration" )
 message( "    Debug build:      " ${INFO_IS_DEBUG} )
-message( "    C++11 support:    " ${INFO_IS_CXX11_SUPPORT} )
+message( "    C++11 support:    " ${INFO_SUPPORTS_CXX11} )
 message( "" )
 message( "  Platform information" )
 message( "    Endianness:       " ${INFO_ENDIANNESS} )
