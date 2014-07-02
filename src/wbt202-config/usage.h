@@ -3,6 +3,7 @@
 
 #include <string>
 
-void usage( std::string argv0 = "wbt202-config" );
+void displayUsage( std::string argv0 = "wbt202-config" );
+void displayVersion();
 
 #endif // USAGE_H

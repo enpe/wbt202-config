@@ -4,17 +4,6 @@
 #include "usage.h"
 #include "status.h"
 
-#include <iostream>
-#include <string>
-
-namespace
-{
-void version()
-{
-	std::cout << "VERSION-TAG, GIT-REVISION, BUILD-DATE" << std::endl;
-}
-} // namespace
-
 int main( int argc, char ** argv )
 {
 	int status = STATUS_NO_ERROR;
@@ -35,11 +24,11 @@ int main( int argc, char ** argv )
 				break;
 
 			case DISPLAY_USAGE:
-				usage( argv[0] );
+				displayUsage( argv[0] );
 				break;
 
 			case DISPLAY_VERSION:
-				version();
+				displayVersion();
 				break;
 
 			case NO_ACTION:

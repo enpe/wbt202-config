@@ -4,7 +4,10 @@
 #include <getopt.h>
 
 #include <cassert>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 namespace {
 
@@ -12,14 +15,22 @@ const char shortOpts[] = "edc:b:vh";
 
 bool fileExists( std::string filename )
 {
-	// TODO Check if the file really exists.
-	return true;
+	std::ofstream file( filename.c_str(), std::ios::binary );
+
+	bool isWritable = file.is_open();
+
+	if ( ! isWritable )
+		std::cerr << "Cannot write to file <" << filename << ">." << std::endl;
+
+	return isWritable;
 }
 
 } // namespace
 
 Command parseArguments( int argc, char ** argv )
 {
+	using namespace std;
+
 	Command command;
 
 	if ( argc < 2 )
@@ -31,7 +42,7 @@ Command parseArguments( int argc, char ** argv )
 	//
 	char ch = 0;
 	bool encode = false, decode = false;
-	std::string config, binary;
+	string config, binary;
 
 	while ( ( ch = getopt( argc, argv, shortOpts ) ) != -1 )
 	{
@@ -86,18 +97,18 @@ Command parseArguments( int argc, char ** argv )
 			else          command.action = DECODE;
 
 			command.iniFile = config;
-			command.gpsFile = std::string( binary ) + std::string( "/GPS.BIN" );
-			command.logFile = std::string( binary ) + std::string( "/LOG.BIN" );
-			command.sysFile = std::string( binary ) + std::string( "/SYS.BIN" );
+			command.gpsFile = string( binary ) + string( "/GPS.BIN" );
+			command.logFile = string( binary ) + string( "/LOG.BIN" );
+			command.sysFile = string( binary ) + string( "/SYS.BIN" );
 
-			std::string filenames[] =
+			string filenames[] =
 			{
 				command.iniFile,
 				command.gpsFile,
 				command.logFile,
 				command.sysFile
 			};
-			int count = static_cast<int>( sizeof( filenames ) / sizeof( std::string ) );
+			int count = static_cast<int>( sizeof( filenames ) / sizeof( string ) );
 
 			for ( int i = 0; i < count; ++i )
 				if ( ! fileExists( filenames[ i ] ) )
