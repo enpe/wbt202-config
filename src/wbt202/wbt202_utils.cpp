@@ -87,7 +87,7 @@ bool enabledPassword( uint32_t p )
 
 bool isValid( const GpsBin * gps )
 {
-	bool valid = false;
+	bool valid = true;
 
 	if ( gps )
 	{
@@ -99,7 +99,7 @@ bool isValid( const GpsBin * gps )
 
 bool isValid( const LogBin * log )
 {
-	bool valid = false;
+	bool valid = true;
 
 	if ( log )
 	{
@@ -111,7 +111,7 @@ bool isValid( const LogBin * log )
 
 bool isValid( const SysBin * sys )
 {
-	bool valid = false;
+	bool valid = true;
 
 	if ( sys )
 	{
@@ -379,6 +379,19 @@ std::vector<char> readFile( const char * filename )
 		std::istreambuf_iterator<char>() );
 }
 
+void writeFile( const char * filename, const std::vector<unsigned char> & data )
+{
+	std::ofstream file( filename, std::ios::binary );
+
+	if ( ! file.is_open() )
+	{
+		std::cerr << "Cannot write to " << filename << std::endl;
+		return;
+	}
+
+	file.write( reinterpret_cast<const char*>( &(data[0]) ), data.size() );
+}
+
 std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 {
 	Field fields[] =
@@ -544,9 +557,28 @@ void saveIni( const std::string filename, const Wbt202 & wbt202 )
 
 void loadIni( Wbt202 & wbt202, const std::string filename )
 {
-	// TODO What default values should be used?
-	// TODO Compute checksums, etc. and add checks.
-	// TODO Return value of this function: bool vs. enum?
+	CSimpleIniA ini;
+	SI_Error status = ini.LoadFile( filename.c_str() );
+
+	assert( status == SI_OK );
+	if ( status != SI_OK )
+	{
+		std::cerr << "Could not load ini-file <" << filename << ">." << std::endl;
+		return;
+	}
+
+	setDeviceName(       wbt202, ini.GetValue(     "SYS", "device_name",        ""              ) );
+	setDeviceInfo(       wbt202, ini.GetValue(     "SYS", "device_info",        ""              ) );
+	setRestartMode(      wbt202, ini.GetLongValue( "SYS", "restart_mode",       AUTOMATIC_START ) );
+	setShakeMode(        wbt202, ini.GetBoolValue( "SYS", "shake_mode",         false           ) );
+	setShakeModeTimeout( wbt202, ini.GetLongValue( "SYS", "shake_mode_timeout", 7200            ) );
+
+	std::string password = ini.GetValue( "SYS", "password", "" );
+	if ( ! password.empty() )
+		wbt202.sys.password = encodePassword( atoi( password.c_str() ) );
+
+	setTimeZone(         wbt202, ini.GetLongValue( "SYS", "time_zone",          0 ) );
+	setSystemOfUnits(    wbt202, ini.GetLongValue( "SYS", "unit",               0 ) );
 }
 
 std::string getWbt202StatusString( Wbt202Status status )
@@ -595,23 +627,23 @@ Wbt202Status setDeviceInfo( Wbt202 & wbt202, std::string info )
 	if ( length >= maxLength )
 		return WBT202_DEVICE_NAME_TOO_LONG;
 
-	memset( wbt202.sys.device_name, 0, maxLength );
-	std::copy( info.begin(), info.end(), wbt202.sys.device_name );
+	memset( wbt202.sys.device_info, 0, maxLength );
+	std::copy( info.begin(), info.end(), wbt202.sys.device_info );
 
 	return WBT202_SUCCESS;
 }
 
-Wbt202Status setRestartMode( Wbt202 & wbt202, RestartMode mode )
+Wbt202Status setRestartMode( Wbt202 & wbt202, int restartMode )
 {
 	Wbt202Status status = WBT202_UNKNOWN_ERROR;
 
-	switch ( mode )
+	switch ( restartMode )
 	{
 		case AUTOMATIC_START:
 		case COLD_START:
 		case WARM_START:
 		case HOT_START:
-			wbt202.sys.restart_mode = mode;
+			wbt202.sys.restart_mode = restartMode;
 			status = WBT202_SUCCESS;
 			break;
 
@@ -623,15 +655,12 @@ Wbt202Status setRestartMode( Wbt202 & wbt202, RestartMode mode )
 	return status;
 }
 
-Wbt202Status setShakeMode( Wbt202 & wbt202, Wbt202OnOff onoff )
+Wbt202Status setShakeMode( Wbt202 & wbt202, bool onoff )
 {
 	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
 
-	if ( onoff == ON || onoff == OFF )
-	{
-		wbt202.sys.shake_mode = onoff;
-		status = WBT202_SUCCESS;
-	}
+	wbt202.sys.shake_mode = onoff;
+	status = WBT202_SUCCESS;
 
 	return status;
 }
@@ -677,13 +706,13 @@ Wbt202Status setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
 }
 
 
-Wbt202Status setSystemOfUnits( Wbt202 & wbt202, SystemOfUnits unit )
+Wbt202Status setSystemOfUnits( Wbt202 & wbt202, int systemOfUnits )
 {
 	Wbt202Status status = WBT202_VALUE_OUT_OF_RANGE;
 
-	if ( unit == METRIC || unit== IMPERIAL )
+	if ( systemOfUnits == METRIC || systemOfUnits== IMPERIAL )
 	{
-		wbt202.sys.unit = unit;
+		wbt202.sys.unit = systemOfUnits;
 		status = WBT202_SUCCESS;
 	}
 

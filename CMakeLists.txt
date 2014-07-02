@@ -21,7 +21,7 @@ elseif ( ${COMPILER_SUPPORTS_CXX0X} )
 	set( INFO_SUPPORTS_CXX11 "Yes (C++0x only)" )
 endif( ${COMPILER_SUPPORTS_CXX11} )
 
-# Check the endianness of the system and set define accordingly.
+# Check the endianness of the system and set defines accordingly.
 # Taken from:
 # http://barney.cs.uni-potsdam.de/pipermail/kdevelop/2011-February/016896.html
 include( TestBigEndian )
@@ -45,18 +45,30 @@ endif ()
 
 # Include directories and sources.
 set( PROJECT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR} )
-include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/src )
+#include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/src )
 include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/submodules/simpleini )
 include_directories(               ${CMAKE_SOURCE_DIR}/src )
 
-# Build targets
+# Static library containing the main functionality.
 file( GLOB WBT202_SRC_LIST "src/wbt202/*.h" "src/wbt202/*.cpp" )
-add_executable( ${PROJECT_NAME} src/main.cpp ${WBT202_SRC_LIST} )
+add_library( wbt202 STATIC ${WBT202_SRC_LIST} )
+
+# CLI-tool to convert the configuration from binary to text (and vice versa).
+file( GLOB WBT202_CONFIG_SRCS
+	"src/wbt202-config/*.h"
+	"src/wbt202-config/*.cpp" )
+
+add_executable( ${PROJECT_NAME} ${WBT202_CONFIG_SRCS} )
+target_link_libraries( ${PROJECT_NAME} wbt202 )
 
 # Tests
-add_executable( test_memory_alignment src/tests/test_memory_alignment.cpp ${WBT202_SRC_LIST} )
-add_executable( test_endianness       src/tests/test_endianness.cpp       ${WBT202_SRC_LIST} )
-add_executable( test_gps_checksums    src/tests/test_gps_checksums.cpp    ${WBT202_SRC_LIST} )
+add_executable( test_memory_alignment src/tests/test_memory_alignment.cpp )
+add_executable( test_endianness       src/tests/test_endianness.cpp )
+add_executable( test_gps_checksums    src/tests/test_gps_checksums.cpp )
+
+target_link_libraries( test_memory_alignment wbt202 )
+target_link_libraries( test_endianness       wbt202 )
+target_link_libraries( test_gps_checksums    wbt202 )
 
 enable_testing()
 add_test( NAME MEMORY_ALIGNMENT COMMAND test_memory_alignment                                            )
