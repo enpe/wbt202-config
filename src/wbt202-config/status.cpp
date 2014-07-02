@@ -17,7 +17,8 @@ void displayStatusMessages( int status )
 		{ STATUS_CONFIG_FILE_MISSING,  "The .ini-file is missing." },
 		{ STATUS_BINARIES_MISSING,     "No .BIN-files in the specified folder." },
 		{ STATUS_NO_ACTION,            "No action selected. Try the -h switch." },
-		{ STATUS_ACTION_MISMATCH,      "Use either -e (x)or -d, but not both." }
+		{ STATUS_ACTION_MISMATCH,      "Use either -e (x)or -d, but not both." },
+		{ STATUS_UNKNOWN_ERROR,        "An unknown error occured." }
 	};
 	int count = static_cast<int>( sizeof( sm ) / sizeof( StatusMessage ) );
 

@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-Status encode(
+int encode(
 	std::string gpsFile,
 	std::string logFile,
 	std::string sysFile,
@@ -45,7 +45,7 @@ Status encode(
 	return STATUS_NO_ERROR;
 }
 
-Status decode(
+int decode(
 	std::string iniFile,
 	std::string gpsFile,
 	std::string logFile,
