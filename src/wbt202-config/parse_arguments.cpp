@@ -11,18 +11,22 @@
 
 namespace {
 
-const char shortOpts[] = "edc:b:vh";
+const char shortOpts[] = "edc:b:vh"; ///< CLI options in getopt()-format.
 
+/**
+ * @brief Simple test to check if a file exists.
+ * @param filename Name of the file that has to be tested
+ */
 bool fileExists( std::string filename )
 {
-	std::ofstream file( filename.c_str(), std::ios::binary );
+	std::ifstream file( filename.c_str(), std::ios::binary );
 
-	bool isWritable = file.is_open();
+	bool isReadable = file.is_open();
 
-	if ( ! isWritable )
-		std::cerr << "Cannot write to file <" << filename << ">." << std::endl;
+	if ( ! isReadable )
+		std::cerr << "File <" << filename << "> seems not to exist." << std::endl;
 
-	return isWritable;
+	return isReadable;
 }
 
 } // namespace
@@ -39,7 +43,7 @@ Command parseArguments( int argc, char ** argv )
 		return command;
 	}
 
-	//
+	// Parse the command-line options using getopt().
 	char ch = 0;
 	bool encode = false, decode = false;
 	string config, binary;
@@ -78,6 +82,7 @@ Command parseArguments( int argc, char ** argv )
 		}
 	}
 
+	// Evaluate the command-line options.
 	assert( ! ( encode && decode ) );
 	if ( encode && decode )
 	{

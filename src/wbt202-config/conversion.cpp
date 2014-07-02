@@ -13,34 +13,33 @@ int encode(
 {
 	// Initialize the standard values for the device configuration
 	Wbt202 wbt202;
+
+	// Load the settings from the ini-file and overwrite the standard settings.
 	loadIni( wbt202, iniFile );
 
+	// Convert the settings to binary format.
 	unsigned char* gps = toBinary( &(wbt202.gps) );
 	unsigned char* log = toBinary( &(wbt202.log) );
 	unsigned char* sys = toBinary( &(wbt202.sys) );
 	assert( gps && log && sys );
 
+	// Write binary data to corresponding files.
 	struct FilenameData
 	{
 		const char * filename;
-		const unsigned char * data;
-		size_t size;
+		std::vector<unsigned char> data;
 	};
 
 	FilenameData d[] =
 	{
-		{ gpsFile.c_str(), gps, SIZE_GPS_BIN },
-		{ logFile.c_str(), log, SIZE_LOG_BIN },
-		{ sysFile.c_str(), sys, SIZE_SYS_BIN }
+		{ gpsFile.c_str(), std::vector<unsigned char>( gps, gps + SIZE_GPS_BIN ) },
+		{ logFile.c_str(), std::vector<unsigned char>( log, log + SIZE_LOG_BIN ) },
+		{ sysFile.c_str(), std::vector<unsigned char>( sys, sys + SIZE_SYS_BIN ) }
 	};
 	int count = static_cast<int>( sizeof( d ) / sizeof( FilenameData ) );
 
 	for ( int i = 0; i < count; ++i )
-	{
-		std::vector<unsigned char> data( d[ i ].data, d[ i ].data + d[ i ].size );
-
-		writeFile( d[ i ].filename, data );
-	}
+		writeFile( d[ i ].filename, d[ i ].data );
 
 	return STATUS_NO_ERROR;
 }

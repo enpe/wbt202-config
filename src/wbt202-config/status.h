@@ -1,6 +1,9 @@
+/** @file */
+
 #ifndef STATUS_H
 #define STATUS_H
 
+/** @brief Error codes. */
 enum Status
 {
 	STATUS_NO_ERROR             =     0,
@@ -12,6 +15,10 @@ enum Status
 	STATUS_UNKNOWN_ERROR        = 65536
 };
 
+/**
+ * @brief Converts the value of status variable in human-readable messages.
+ * @param status Variable containing error codes.
+ */
 void displayStatusMessages( int status );
 
 #endif // STATUS_H

@@ -25,6 +25,8 @@ void displayStatusMessages( int status )
 	for ( int i = 0; i < count; ++i )
 	{
 		if ( status & sm[ i ].status )
+		{
 			std::cerr << sm[ i ].message << std::endl;
+		}
 	}
 }
