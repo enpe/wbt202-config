@@ -1,7 +1,9 @@
 #include "conversion.h"
 
+#include <wbt202/config-file.h>
 #include <wbt202/wbt202.h>
 #include <wbt202/wbt202_utils.h>
+
 
 #include <cassert>
 
@@ -15,7 +17,7 @@ int encode(
 	Wbt202 wbt202;
 
 	// Load the settings from the ini-file and overwrite the standard settings.
-	loadIni( wbt202, iniFile );
+	loadConfigFile( wbt202, iniFile );
 
 	// Convert the settings to binary format.
 	unsigned char* gps = toBinary( &(wbt202.gps) );
@@ -65,8 +67,7 @@ int decode(
 	wbt202.log = *log;
 	wbt202.sys = *sys;
 
-	saveIni( iniFile, wbt202 );
+	saveConfigFile( iniFile, wbt202 );
 
 	return STATUS_NO_ERROR;
 }
-

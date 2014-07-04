@@ -8,6 +8,13 @@
 #include <iostream>
 #include <vector>
 
+namespace wbt202
+{
+
+inline void test() { std::cout << "Hello world!" << std::endl; }
+
+} // namespace wbt202
+
 /** @name Serialize the configuration data.
  * @{
  */
@@ -69,26 +76,26 @@ SysBin* toSysBin( const std::vector<char> & data );
  */
 void setChecksum( GpsBin & gps );
 
-enum Wbt202Status
+enum W_Status
 {
-	WBT202_SUCCESS = 0,
-	WBT202_DEVICE_NAME_TOO_LONG,
-	WBT202_DEVICE_INFO_TOO_LONG,
-	WBT202_RESTART_MODE_INVALID,
-	WBT202_VALUE_OUT_OF_RANGE,
-	WBT202_UNKNOWN_ERROR
+	W_SUCCESS = 0,
+	W_DEVICE_NAME_TOO_LONG,
+	W_DEVICE_INFO_TOO_LONG,
+	W_RESTART_MODE_INVALID,
+	W_VALUE_OUT_OF_RANGE,
+	W_UNKNOWN_ERROR
 };
 
-std::string getWbt202StatusString( Wbt202Status status );
+std::string getWbt202StatusString( W_Status status );
 
-Wbt202Status setDeviceName( struct Wbt202 & wbt202, std::string name = "" );
-Wbt202Status setDeviceInfo( struct Wbt202 & wbt202, std::string info = "" );
-Wbt202Status setRestartMode( struct Wbt202 & wbt202, int restartMode = AUTOMATIC_START );
-Wbt202Status setShakeMode(struct Wbt202 & wbt202, bool onoff = false );
-Wbt202Status setShakeModeTimeout( struct Wbt202 & wbt202, uint16_t timeout = 300 );
-Wbt202Status setPowerOffTimout( struct Wbt202 & wbt202, uint16_t timeout = 600 );
-Wbt202Status setSystemOfUnits( struct Wbt202 & wbt202, int systemOfUnits = METRIC );
-Wbt202Status setTimeZone( struct Wbt202 & wbt202, int16_t offset = 0 );
+W_Status setDeviceName( struct Wbt202 & wbt202, std::string name = "" );
+W_Status setDeviceInfo( struct Wbt202 & wbt202, std::string info = "" );
+W_Status setRestartMode( struct Wbt202 & wbt202, int restartMode = AUTOMATIC_START );
+W_Status setShakeMode(struct Wbt202 & wbt202, bool onoff = false );
+W_Status setShakeModeTimeout( struct Wbt202 & wbt202, uint16_t timeout = 300 );
+W_Status setPowerOffTimout( struct Wbt202 & wbt202, uint16_t timeout = 600 );
+W_Status setSystemOfUnits( struct Wbt202 & wbt202, int systemOfUnits = METRIC );
+W_Status setTimeZone( struct Wbt202 & wbt202, int16_t offset = 0 );
 
 
 std::vector<char> readFile( const char * filename );
@@ -101,8 +108,5 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps );
 std::ostream& operator<<( std::ostream & os, const LogBin & log );
 std::ostream& operator<<( std::ostream & os, const SysBin & sys );
 /** @} */
-
-void saveIni( const std::string filename, const Wbt202 & wbt202 );
-void loadIni( Wbt202 & wbt202, const std::string filename );
 
 #endif // WBT202_UTILS_H
