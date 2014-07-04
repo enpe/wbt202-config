@@ -8,7 +8,7 @@
 #include <string>
 
 /**
- * @brief Encodes ini-file as binary device files.
+ * @brief Stores configuration of ini-file as binary device files.
  * @param gpsFile Abs. path and name of GPS.BIN.
  * @param logFile Abs. path and name of LOG.BIN.
  * @param sysFile Abs. path and name of SYS.BIN.
@@ -22,7 +22,7 @@ int encode(
 	std::string iniFile );
 
 /**
- * @brief Decodes binary device files which are stored as an ini-file.
+ * @brief Stores binary device files as an human-readable ini-file.
  * @param iniFile Abs. path and name of the ini-file.
  * @param gpsFile Abs. path and name of GPS.BIN.
  * @param logFile Abs. path and name of LOG.BIN.
