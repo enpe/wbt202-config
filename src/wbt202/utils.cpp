@@ -1,6 +1,6 @@
 
-#include "wbt202_utils.h"
-#include "password.h"
+#include "wbt202/utils.h"
+#include "wbt202/password.h"
 
 #include <algorithm>
 #include <cassert>
@@ -177,21 +177,21 @@ void setChecksum(
 
 } // unnamed namespace
 
-unsigned char* toBinary( const GpsBin * gps )
+unsigned char* wbt202::toBinary( const GpsBin * gps )
 {
-	return toBinary< GpsBin >( gps );
+	return ::toBinary< GpsBin >( gps );
 }
 
-unsigned char* toBinary( const LogBin * log )
+unsigned char* wbt202::toBinary( const LogBin * log )
 {
-	return toBinary< LogBin >( log );}
+	return ::toBinary< LogBin >( log );}
 
-unsigned char* toBinary( const SysBin * sys )
+unsigned char* wbt202::toBinary( const SysBin * sys )
 {
-	return toBinary< SysBin >( sys );
+	return ::toBinary< SysBin >( sys );
 }
 
-GpsBin * toGpsBin( const std::vector<char> & data )
+GpsBin * wbt202::toGpsBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 
@@ -231,7 +231,7 @@ GpsBin * toGpsBin( const std::vector<char> & data )
 	return gps;
 }
 
-LogBin* toLogBin( const std::vector<char> & data )
+LogBin* wbt202::toLogBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 	assert( data.size() == SIZE_LOG_BIN );
@@ -266,7 +266,7 @@ LogBin* toLogBin( const std::vector<char> & data )
 	return log;
 }
 
-SysBin* toSysBin( const std::vector<char> & data )
+SysBin* wbt202::toSysBin( const std::vector<char> & data )
 {
 	assert( ! data.empty() );
 	assert( data.size() == SIZE_SYS_BIN );
@@ -299,7 +299,7 @@ SysBin* toSysBin( const std::vector<char> & data )
 	return sys;
 }
 
-void setChecksum( GpsBin & gps )
+void wbt202::setChecksum( GpsBin & gps )
 {
 	struct Block
 	{
@@ -324,7 +324,7 @@ void setChecksum( GpsBin & gps )
 
 	for ( int i = 0; i < count; ++i )
 	{
-		setChecksum(
+		::setChecksum(
 			blocks[i].checksum_01,
 			blocks[i].checksum_02,
 			blocks[i].pSrc,
@@ -332,7 +332,7 @@ void setChecksum( GpsBin & gps )
 	}
 }
 
-std::vector<char> readFile( const char * filename )
+std::vector<char> wbt202::readFile( const char * filename )
 {
 	std::ifstream file( filename, std::ios::binary );
 
@@ -347,7 +347,7 @@ std::vector<char> readFile( const char * filename )
 		std::istreambuf_iterator<char>() );
 }
 
-void writeFile( const char * filename, const std::vector<unsigned char> & data )
+void wbt202::writeFile( const char * filename, const std::vector<unsigned char> & data )
 {
 	std::ofstream file( filename, std::ios::binary );
 
@@ -360,7 +360,7 @@ void writeFile( const char * filename, const std::vector<unsigned char> & data )
 	file.write( reinterpret_cast<const char*>( &(data[0]) ), data.size() );
 }
 
-std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
+std::ostream& wbt202::operator<<( std::ostream & os, const GpsBin & gps )
 {
 	Field fields[] =
 	{
@@ -389,7 +389,7 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps )
 	return os;
 }
 
-std::ostream & operator<<( std::ostream & os, const LogBin & log )
+std::ostream & wbt202::operator<<( std::ostream & os, const LogBin & log )
 {
 	Field fields[] = {
 		{ "magic_begin",           toString( log.magic_begin     ), "", },
@@ -416,7 +416,7 @@ std::ostream & operator<<( std::ostream & os, const LogBin & log )
 	return os;
 }
 
-std::ostream& operator<<( std::ostream & os, const SysBin & sys )
+std::ostream& wbt202::operator<<( std::ostream & os, const SysBin & sys )
 {
 
 	std::string device_name = "<not set>";
@@ -466,32 +466,7 @@ std::ostream& operator<<( std::ostream & os, const SysBin & sys )
 	return os;
 }
 
-
-std::string getWbt202StatusString( W_Status status )
-{
-	std::string statusString;
-
-	switch ( status )
-	{
-		case W_DEVICE_NAME_TOO_LONG:
-			statusString = "The device name is too long (max. 19 characters).";
-			break;
-
-		case W_DEVICE_INFO_TOO_LONG:
-			statusString = "The device info is too long (max. 19 characters).";
-			break;
-
-		case W_UNKNOWN_ERROR:
-		default:
-			statusString = "Unknown error.";
-			break;
-	}
-
-	return statusString;
-}
-
-
-W_Status setDeviceName( Wbt202 & wbt202, std::string name )
+wbt202::W_Status wbt202::setDeviceName( Wbt202 & wbt202, std::string name )
 {
 	size_t length = name.length();
 	size_t maxLength = 20; // TODO This should not be hard-coded (here).
@@ -502,10 +477,10 @@ W_Status setDeviceName( Wbt202 & wbt202, std::string name )
 	memset( wbt202.sys.device_name, 0, maxLength );
 	std::copy( name.begin(), name.end(), wbt202.sys.device_name );
 
-	return W_SUCCESS;
+	return W_NO_ERROR;
 }
 
-W_Status setDeviceInfo( Wbt202 & wbt202, std::string info )
+wbt202::W_Status wbt202::setDeviceInfo( Wbt202 & wbt202, std::string info )
 {
 	size_t length = info.length();
 	size_t maxLength = 20; // TODO This should not be hard-coded (here).
@@ -516,10 +491,10 @@ W_Status setDeviceInfo( Wbt202 & wbt202, std::string info )
 	memset( wbt202.sys.device_info, 0, maxLength );
 	std::copy( info.begin(), info.end(), wbt202.sys.device_info );
 
-	return W_SUCCESS;
+	return W_NO_ERROR;
 }
 
-W_Status setRestartMode( Wbt202 & wbt202, int restartMode )
+wbt202::W_Status wbt202::setRestartMode( Wbt202 & wbt202, int restartMode )
 {
 	W_Status status = W_UNKNOWN_ERROR;
 
@@ -530,7 +505,7 @@ W_Status setRestartMode( Wbt202 & wbt202, int restartMode )
 		case WARM_START:
 		case HOT_START:
 			wbt202.sys.restart_mode = restartMode;
-			status = W_SUCCESS;
+			status = W_NO_ERROR;
 			break;
 
 		default:
@@ -541,18 +516,18 @@ W_Status setRestartMode( Wbt202 & wbt202, int restartMode )
 	return status;
 }
 
-W_Status setShakeMode( Wbt202 & wbt202, bool onoff )
+wbt202::W_Status wbt202::setShakeMode( Wbt202 & wbt202, bool onoff )
 {
 	W_Status status = W_VALUE_OUT_OF_RANGE;
 
 	wbt202.sys.shake_mode = onoff;
-	status = W_SUCCESS;
+	status = W_NO_ERROR;
 
 	return status;
 }
 
 
-W_Status setShakeModeTimeout( Wbt202 & wbt202, uint16_t timeout )
+wbt202::W_Status wbt202::setShakeModeTimeout( Wbt202 & wbt202, uint16_t timeout )
 {
 	W_Status status = W_UNKNOWN_ERROR;
 	uint16_t minTimeout = 60;   // TODO This should not be hard-coded (here).
@@ -565,14 +540,14 @@ W_Status setShakeModeTimeout( Wbt202 & wbt202, uint16_t timeout )
 	else
 	{
 		wbt202.sys.shake_mode_timeout = timeout;
-		status = W_SUCCESS;
+		status = W_NO_ERROR;
 	}
 
 	return status;
 }
 
 
-W_Status setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
+wbt202::W_Status wbt202::setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
 {
 	W_Status status = W_UNKNOWN_ERROR;
 	uint16_t minTimeout = 0;    // TODO This should not be hard-coded (here).
@@ -585,35 +560,35 @@ W_Status setPowerOffTimout( Wbt202 & wbt202, uint16_t timeout )
 	else
 	{
 		wbt202.sys.power_off_timeout = timeout;
-		status = W_SUCCESS;
+		status = W_NO_ERROR;
 	}
 
 	return status;
 }
 
 
-W_Status setSystemOfUnits( Wbt202 & wbt202, int systemOfUnits )
+wbt202::W_Status wbt202::setSystemOfUnits( Wbt202 & wbt202, int systemOfUnits )
 {
 	W_Status status = W_VALUE_OUT_OF_RANGE;
 
 	if ( systemOfUnits == METRIC || systemOfUnits== IMPERIAL )
 	{
 		wbt202.sys.unit = systemOfUnits;
-		status = W_SUCCESS;
+		status = W_NO_ERROR;
 	}
 
 	return status;
 }
 
 
-W_Status setTimeZone( Wbt202 & wbt202, int16_t offset )
+wbt202::W_Status wbt202::setTimeZone( Wbt202 & wbt202, int16_t offset )
 {
 	W_Status status = W_VALUE_OUT_OF_RANGE;
 
 	if ( -1400 <= offset && offset <= 1400 )
 	{
 		wbt202.sys.time_zone = offset;
-		status = W_SUCCESS;
+		status = W_NO_ERROR;
 	}
 
 	return status;

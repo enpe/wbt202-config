@@ -4,16 +4,13 @@
 #define WBT202_UTILS_H
 
 #include <wbt202/wbt202.h>
+#include <wbt202/status.h>
 
 #include <iostream>
 #include <vector>
 
 namespace wbt202
 {
-
-inline void test() { std::cout << "Hello world!" << std::endl; }
-
-} // namespace wbt202
 
 /** @name Serialize the configuration data.
  * @{
@@ -76,18 +73,6 @@ SysBin* toSysBin( const std::vector<char> & data );
  */
 void setChecksum( GpsBin & gps );
 
-enum W_Status
-{
-	W_SUCCESS = 0,
-	W_DEVICE_NAME_TOO_LONG,
-	W_DEVICE_INFO_TOO_LONG,
-	W_RESTART_MODE_INVALID,
-	W_VALUE_OUT_OF_RANGE,
-	W_UNKNOWN_ERROR
-};
-
-std::string getWbt202StatusString( W_Status status );
-
 W_Status setDeviceName( struct Wbt202 & wbt202, std::string name = "" );
 W_Status setDeviceInfo( struct Wbt202 & wbt202, std::string info = "" );
 W_Status setRestartMode( struct Wbt202 & wbt202, int restartMode = AUTOMATIC_START );
@@ -108,5 +93,7 @@ std::ostream& operator<<( std::ostream & os, const GpsBin & gps );
 std::ostream& operator<<( std::ostream & os, const LogBin & log );
 std::ostream& operator<<( std::ostream & os, const SysBin & sys );
 /** @} */
+
+} // namespace wbt202
 
 #endif // WBT202_UTILS_H

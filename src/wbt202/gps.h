@@ -274,7 +274,7 @@
 #ifndef GPSBIN_H
 #define GPSBIN_H
 
-#include <wbt202/GpsBinBlocks.h>
+#include <wbt202/gps-blocks.h>
 
 #include <cstdlib>
 #include <stdint.h>

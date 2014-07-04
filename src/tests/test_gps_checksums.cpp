@@ -10,7 +10,7 @@
   */
 
 #include <wbt202/wbt202.h>
-#include <wbt202/wbt202_utils.h>
+#include <wbt202/utils.h>
 
 #include <iostream>
 #include <string>
@@ -19,18 +19,18 @@ bool testGpsChecksums( std::string filename )
 {
 	std::cout << std::endl << "file: " << filename << std::endl;
 
-	std::vector<char> buffer = readFile( filename.c_str() );
+	std::vector<char> buffer = wbt202::readFile( filename.c_str() );
 	if ( buffer.empty() )
 		return false;
 
 	bool passed = false;
-	GpsBin * original = toGpsBin( buffer );
+	GpsBin * original = wbt202::toGpsBin( buffer );
 
 	if ( original )
 	{
 		// Re-compute the checksums and compare them to the original.
 		GpsBin test = *original;
-		setChecksum( test );
+		wbt202::setChecksum( test );
 
 		struct Field
 		{

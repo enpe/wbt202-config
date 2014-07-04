@@ -1,11 +1,12 @@
 #include "conversion.h"
 
 #include <wbt202/config-file.h>
+#include <wbt202/utils.h>
 #include <wbt202/wbt202.h>
-#include <wbt202/wbt202_utils.h>
-
 
 #include <cassert>
+
+using namespace wbt202;
 
 int encode(
 	std::string gpsFile,
@@ -20,9 +21,9 @@ int encode(
 	loadConfigFile( wbt202, iniFile );
 
 	// Convert the settings to binary format.
-	unsigned char* gps = toBinary( &(wbt202.gps) );
-	unsigned char* log = toBinary( &(wbt202.log) );
-	unsigned char* sys = toBinary( &(wbt202.sys) );
+	unsigned char* gps = wbt202::toBinary( &(wbt202.gps) );
+	unsigned char* log = wbt202::toBinary( &(wbt202.log) );
+	unsigned char* sys = wbt202::toBinary( &(wbt202.sys) );
 	assert( gps && log && sys );
 
 	// Write binary data to corresponding files.
@@ -41,7 +42,7 @@ int encode(
 	int count = static_cast<int>( sizeof( d ) / sizeof( FilenameData ) );
 
 	for ( int i = 0; i < count; ++i )
-		writeFile( d[ i ].filename, d[ i ].data );
+		wbt202::writeFile( d[ i ].filename, d[ i ].data );
 
 	return STATUS_NO_ERROR;
 }
@@ -53,9 +54,9 @@ int decode(
 	std::string sysFile )
 {
 	// Load the binary files into memory.
-	GpsBin * gps = toGpsBin( readFile( gpsFile.c_str() ) );
-	LogBin * log = toLogBin( readFile( logFile.c_str() ) );
-	SysBin * sys = toSysBin( readFile( sysFile.c_str() ) );
+	GpsBin * gps = wbt202::toGpsBin( wbt202::readFile( gpsFile.c_str() ) );
+	LogBin * log = wbt202::toLogBin( wbt202::readFile( logFile.c_str() ) );
+	SysBin * sys = wbt202::toSysBin( wbt202::readFile( sysFile.c_str() ) );
 
 	if ( ! ( gps && log && sys ) )
 		return STATUS_BINARIES_MISSING;

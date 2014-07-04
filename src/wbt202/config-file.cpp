@@ -1,6 +1,7 @@
-#include "config-file.h"
-#include "wbt202_utils.h"
-#include "password.h"
+#include "wbt202/config-file.h"
+#include "wbt202/utils.h"
+#include "wbt202/password.h"
+#include "wbt202/status.h"
 
 #include <SimpleIni.h>
 
@@ -8,8 +9,9 @@
 #include <fstream>
 #include <sstream>
 
+using namespace wbt202;
 
-void saveConfigFile( const std::string filename, const Wbt202 & wbt202 )
+void wbt202::saveConfigFile( const std::string filename, const Wbt202 & wbt202 )
 {
 	// TODO What is a good data structure to represent the data fields, their description, comments, units, range, etc.?
 	// TODO Add checks before writing the data to the file.
@@ -47,13 +49,13 @@ void saveConfigFile( const std::string filename, const Wbt202 & wbt202 )
 		password = oss.str();
 	}
 
-	ini.SetValue(     "GPS", NULL,                   NULL,                   "# GPS-specific settings." );
+	ini.SetValue(     "GPS", NULL,                   NULL,                   "# GPS.BIN settings." );
 	// TODO continue ...
 
-	ini.SetValue(     "LOG", NULL,                   NULL,                   "# LOG-specific settings." );
+	ini.SetValue(     "LOG", NULL,                   NULL,                   "# LOG.BIN settings." );
 	// TODO continue ...
 
-	ini.SetValue(     "SYS", NULL,                   NULL,                   "# Device-specific settings." );
+	ini.SetValue(     "SYS", NULL,                   NULL,                   "# SYS.BIN settings." );
 	ini.SetValue(     "SYS", "device_name",          device_name.c_str(),    "# Name of the device when connected to the computer using the mass storage mode (max. 19 characters)." );
 	ini.SetValue(     "SYS", "device_info",          device_info.c_str(),    "# A short description of the device (max. 19 characters)." );
 	ini.SetLongValue( "SYS", "restart_mode",         sys.restart_mode,       "# Mode used to get a first fix on the next start of the device." );
@@ -66,7 +68,7 @@ void saveConfigFile( const std::string filename, const Wbt202 & wbt202 )
 	ini.SaveFile( filename.c_str(), true );
 }
 
-void loadConfigFile( Wbt202 & wbt202, const std::string filename )
+void wbt202::loadConfigFile( Wbt202 & wbt202, const std::string filename )
 {
 	CSimpleIniA ini;
 	SI_Error status = ini.LoadFile( filename.c_str() );

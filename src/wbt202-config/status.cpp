@@ -27,6 +27,11 @@ void displayStatusMessages( int status )
 		if ( status & sm[ i ].status )
 		{
 			std::cerr << sm[ i ].message << std::endl;
+
+			status -= sm[ i ].status;
+			assert( status >= 0 );
 		}
 	}
+
+	assert( status == 0 );
 }

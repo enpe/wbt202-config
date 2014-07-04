@@ -1,5 +1,5 @@
-#include "password.h"
-#include "SysBin.h"
+#include "wbt202/password.h"
+#include "wbt202/sys.h"
 
 uint32_t encodePassword( uint32_t p )
 {
