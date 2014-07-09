@@ -313,6 +313,16 @@ static const uint8_t factoryGpsBin[ SIZE_GPS_BIN ] =
 	0x00, 0x00, 0x00, 0x00, 0x2b, 0xb9
 };
 
+enum GpsMode
+{
+	HighAccuracy = 0,
+	MiddleAccuracy = 1,
+	FactorySetting = 2,
+	MiddleAcquisitionTime = 3,
+	FastAcquisitionTime = 4,
+	UserDefine = 5
+};
+
 #pragma pack(push, 1) // Change the memory alignment but store previous state.
 
 /** @brief Overlay for the binary data in SYS.BIN. */
