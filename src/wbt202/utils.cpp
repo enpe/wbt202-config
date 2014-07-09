@@ -593,3 +593,51 @@ wbt202::W_Status wbt202::setTimeZone( Wbt202 & wbt202, int16_t offset )
 
 	return status;
 }
+
+
+wbt202::W_Status wbt202::setLogMode( LogModeUserDefined mode )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setSpeed( uint8_t lowest, uint16_t low, uint16_t middle, uint16_t high, uint16_t highest )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setTime( uint16_t lowest, uint16_t low, uint16_t middle, uint16_t high )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setDegrees( uint8_t degrees_point )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setSeconds( uint16_t seconds_point )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setMeters( uint16_t meters_point )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setGPSMode( GpsMode mode )
+{
+
+}
+
+
+wbt202::W_Status wbt202::setSBASEnabled( bool enabled )
+{
+
+}

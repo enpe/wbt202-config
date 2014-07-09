@@ -73,6 +73,44 @@ SysBin* toSysBin( const std::vector<char> & data );
  */
 void setChecksum( GpsBin & gps );
 
+/** @name Modifiers (LOG.BIN)
+ * @{ */
+W_Status setLogMode( LogModeUserDefined mode );
+W_Status setSpeed( uint8_t lowest, uint16_t low, uint16_t middle, uint16_t high, uint16_t highest );
+W_Status setTime( uint16_t lowest, uint16_t low, uint16_t middle, uint16_t high );
+W_Status setDegrees( uint8_t degrees_point );
+W_Status setSeconds( uint16_t seconds_point );
+W_Status setMeters( uint16_t meters_point );
+/** @} */
+
+/** @name Modifiers (GPS.BIN)
+ * @{ */
+W_Status setGPSMode( GpsMode mode = HighAccuracy );
+W_Status setSBASEnabled( bool enabled );
+// gpgll
+// gpvtg
+// gpzda
+// min_visible_satellites
+// min_signal_strength
+// initial_fix_3d
+// fix_mode
+// fix_altitude_2d
+// pdop_mask
+// tdop_mask
+// p_accuracy_map
+// t_accuracy_map
+// led_blink_cycle
+// led_off_cycle
+// sbas_mode
+// sbas_usage
+// (sbas_)channels
+// scanmode_02
+// scanmode_01
+/** @} */
+
+
+/** @name Modifiers (SYS.BIN)
+ * @{ */
 W_Status setDeviceName( struct Wbt202 & wbt202, std::string name = "" );
 W_Status setDeviceInfo( struct Wbt202 & wbt202, std::string info = "" );
 W_Status setRestartMode( struct Wbt202 & wbt202, int restartMode = AUTOMATIC_START );
@@ -81,7 +119,7 @@ W_Status setShakeModeTimeout( struct Wbt202 & wbt202, uint16_t timeout = 300 );
 W_Status setPowerOffTimout( struct Wbt202 & wbt202, uint16_t timeout = 600 );
 W_Status setSystemOfUnits( struct Wbt202 & wbt202, int systemOfUnits = METRIC );
 W_Status setTimeZone( struct Wbt202 & wbt202, int16_t offset = 0 );
-
+/** @} */
 
 std::vector<char> readFile( const char * filename );
 void writeFile( const char * filename, const std::vector<unsigned char> & data );
