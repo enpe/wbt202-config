@@ -1,7 +1,11 @@
 wbt202-config
 =============
 
-Command-line configuration tool for the Wintec WBT 202.
+Command-line configuration tool for the [Wintec WBT-202 GPS Data Logger][1].
+
+The device comes with the `WBT_Tool.exe` for changing the configuration. Unfortunately, this program only works on Windows and leaves non-Windows users with no simple way to configure their data logger since the configuration is stored in 3 undocumented binary files.
+
+This project aims at documenting these configuration files and supplying a command-line tool for easily reading and writing them.
 
 
 Building the project
@@ -22,4 +26,7 @@ Building the project
         make
 
     For building with debug information call cmake with the `-DDEBUG=1` option.
+
+
+[1]: http://www.wintec.com.tw/en/Products/gps/wbt_202.html
 
