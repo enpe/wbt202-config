@@ -1,74 +1,15 @@
 cmake_minimum_required( VERSION 3.0 )
 project( wbt202-config VERSION 0.1 )
 
-option( DEBUG "Build with debug information" OFF )
-
-# Check support for C++11, and, if available, enable it.
-include( CheckCXXCompilerFlag )
-check_cxx_compiler_flag( "-std=c++11" COMPILER_SUPPORTS_CXX11 )
-check_cxx_compiler_flag( "-std=c++0x" COMPILER_SUPPORTS_CXX0X )
-
-set( INFO_SUPPORTS_CXX11 "No" )
-if ( ${COMPILER_SUPPORTS_CXX11} )
-	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
-	set( INFO_SUPPORTS_CXX11 "Yes" )
-
-elseif ( ${COMPILER_SUPPORTS_CXX0X} )
-	# Treat support of C++0x as C++11 support because that also suffices for
-	# what we are currently using.
-	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" )
-	set( INFO_SUPPORTS_CXX11 "Yes (C++0x only)" )
-
-endif( ${COMPILER_SUPPORTS_CXX11} )
-
-# Check the endianness of the system and set define accordingly.
-# Taken from:
-# http://barney.cs.uni-potsdam.de/pipermail/kdevelop/2011-February/016896.html
-include( TestBigEndian )
-test_big_endian( IS_BIG_ENDIAN )
-
-add_definitions( -DIS_BIG_ENDIAN=${IS_BIG_ENDIAN} )
-if ( IS_BIG_ENDIAN )
-	set( INFO_ENDIANNESS "big-endian" )
-else ()
-	set( INFO_ENDIANNESS "little-endian" )
-endif ()
-
-# Debug build
-if ( DEBUG )
-	add_definitions( -DDEBUG )
-	add_definitions( -g -O0 -Wall )
-	set( INFO_IS_DEBUG "Yes" )
-else ()
-	set( INFO_IS_DEBUG "No" )
-endif ()
-
-# Debug builds: append -d to all targets.
-set( CMAKE_DEBUG_POSTFIX "d" )
+list( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
+include ( config )
 
 add_subdirectory( src/libwbt202 )
 add_subdirectory( src/tests     )
 
-# Include directories and sources.
-set( PROJECT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR} )
-include_directories( BEFORE SYSTEM ${CMAKE_CURRENT_LIST_DIR}/src/libwbt202/include )
-include_directories(               ${CMAKE_CURRENT_LIST_DIR}/src/libwbt202/include )
-
 # Build targets
-file( GLOB WBT202_SRC_LIST "src/wbt202/include/libwbt202/*.h" "src/libwbt202/src/*.cpp" )
-add_executable( ${PROJECT_NAME} src/main.cpp ${WBT202_SRC_LIST} )
-
-# Tests
-add_executable( test_memory_alignment src/tests/test_memory_alignment.cpp ${WBT202_SRC_LIST} )
-add_executable( test_endianness       src/tests/test_endianness.cpp       ${WBT202_SRC_LIST} )
-add_executable( test_gps_checksums    src/tests/test_gps_checksums.cpp    ${WBT202_SRC_LIST} )
-
-enable_testing()
-add_test( NAME MEMORY_ALIGNMENT COMMAND test_memory_alignment                                            )
-add_test( NAME ENDIANNESS       COMMAND test_endianness                                                  )
-add_test( NAME GPS_CHECKSUMS    COMMAND test_gps_checksums "${CMAKE_SOURCE_DIR}/data/WBT202/SYS/GPS.BIN" )
+add_executable( ${PROJECT_NAME} src/main.cpp )
+target_link_libraries( ${PROJECT_NAME} wbt202 )
 
 # Print build configuration and info
 message( "" )
@@ -79,4 +20,3 @@ message( "" )
 message( "  Platform information" )
 message( "    Endianness:       " ${INFO_ENDIANNESS} )
 message( "" )
-
