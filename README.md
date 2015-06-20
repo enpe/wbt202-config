@@ -1,6 +1,8 @@
 wbt202-config
 =============
 
+[![Build Status](https://travis-ci.org/enpe/wbt202-config.svg?branch=master)](https://travis-ci.org/enpe/wbt202-config)
+
 Command-line configuration tool for the [Wintec WBT-202 GPS Data Logger][1].
 
 The device comes with the `WBT_Tool.exe` for changing the configuration. Unfortunately, this program only works on Windows and leaves non-Windows users with no simple way to configure their data logger since the configuration is stored in 3 undocumented binary files.
