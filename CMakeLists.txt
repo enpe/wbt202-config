@@ -1,5 +1,5 @@
-project( wbt202-config )
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.0 )
+project( wbt202-config VERSION 0.1 )
 
 option( DEBUG "Build with debug information" OFF )
 
@@ -13,12 +13,14 @@ if ( ${COMPILER_SUPPORTS_CXX11} )
 	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 	set( INFO_SUPPORTS_CXX11 "Yes" )
+
 elseif ( ${COMPILER_SUPPORTS_CXX0X} )
 	# Treat support of C++0x as C++11 support because that also suffices for
 	# what we are currently using.
 	add_definitions( -DCOMPILER_SUPPORTS_CXX11 )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" )
 	set( INFO_SUPPORTS_CXX11 "Yes (C++0x only)" )
+
 endif( ${COMPILER_SUPPORTS_CXX11} )
 
 # Check the endianness of the system and set define accordingly.
@@ -43,13 +45,19 @@ else ()
 	set( INFO_IS_DEBUG "No" )
 endif ()
 
+# Debug builds: append -d to all targets.
+set( CMAKE_DEBUG_POSTFIX "d" )
+
+add_subdirectory( src/libwbt202 )
+add_subdirectory( src/tests     )
+
 # Include directories and sources.
 set( PROJECT_INCLUDE_DIRS ${CMAKE_SOURCE_DIR} )
-include_directories( BEFORE SYSTEM ${CMAKE_SOURCE_DIR}/src )
-include_directories(               ${CMAKE_SOURCE_DIR}/src )
+include_directories( BEFORE SYSTEM ${CMAKE_CURRENT_LIST_DIR}/src/libwbt202/include )
+include_directories(               ${CMAKE_CURRENT_LIST_DIR}/src/libwbt202/include )
 
 # Build targets
-file( GLOB WBT202_SRC_LIST "src/wbt202/*.h" "src/wbt202/*.cpp" )
+file( GLOB WBT202_SRC_LIST "src/wbt202/include/libwbt202/*.h" "src/libwbt202/src/*.cpp" )
 add_executable( ${PROJECT_NAME} src/main.cpp ${WBT202_SRC_LIST} )
 
 # Tests
