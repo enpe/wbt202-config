@@ -30,5 +30,5 @@ Building the project
     For building with debug information call cmake with the `-DDEBUG=1` option.
 
 
-[1]: http://www.wintec.com.tw/en/Products/gps/wbt_202.html
+[1]: http://www.wintec-gps.de/wintec_wbt-202.php
 
